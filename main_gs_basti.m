@@ -18,11 +18,10 @@ mode_target_distribution=squeeze(modes(mode_target,:,:));
 
 N_it = 10; % Anzahl der Iterationen
 
-% input_phase = rand(100,100) * 2*pi - pi;
-% input_amp = ones(100,100)/100000;
-% input = input_amp .* exp(1i*input_phase);
-input = load('optical_beam').optical_beam;
-input_amp = abs(input);
+input_phase = rand(100,100) * 2*pi - pi;
+input_amp = ones(100,100)/100000;
+input = input_amp .* exp(1i*input_phase);
+
 for i=1:N_it
     input_fft = fftshift(fft2(input));
 
@@ -34,9 +33,7 @@ for i=1:N_it
 
     input_fft_complete = input_fft_amp .* exp(1i*input_fft_phase);
 
-    target = fftshift(ifft(input_fft_complete));
+    target = fftshift(ifft2(input_fft_complete));
 
     input = input_amp .* exp(1i*angle(target));
-
-    % target_neu_fft = fftshift(fft2(target_neu));
 end
