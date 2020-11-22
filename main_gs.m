@@ -24,7 +24,7 @@ n_SLM=800;      % X-axis    -> number SLM pixel
 [X,Y]=meshgrid(1:n_SLM,1:m_SLM);
 area_analysis=false(n_SLM,m_SLM); % müssen noch nen bereich auf true setzen
 
-gs_mask = gerchberg_saxton(optical_beam, mode_target_distribution);
+gs_mask = dcgs(optical_beam, mode_target_distribution);
 %% Start modulation
 load('optical_beam');   %simuliere einen Gaußschen Laserstrahl
 
@@ -41,6 +41,6 @@ imagesc(abs(mode_target_distribution));title('Gewünschte Amplitudenverteilung')
 subplot(2,2,2);
 imagesc(angle(mode_target_distribution));title('Gewünschte Phasenverteilung');axis image
 subplot(2,2,3);
-imagesc(abs(modulated_beam));title('Modulierte Amplitudenverteilung');axis image
+imagesc(abs(modulated_beam_fft));title('Modulierte Amplitudenverteilung');axis image
 subplot(2,2,4);
-imagesc(angle(modulated_beam));title('Modulierte Phasenverteilung');axis image
+imagesc(angle(modulated_beam_fft));title('Modulierte Phasenverteilung');axis image
