@@ -1,4 +1,7 @@
 %% main
+
+% david is gay
+
 clear all
 % Parameter Multimodefibre
 NA=0.1;
