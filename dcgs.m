@@ -1,6 +1,7 @@
 function [slm_phase_mask] = dcgs(input, target)
 % double constraint gerchbergs-saxton
-N_it = 10; % Anzahl der Iterationen
+
+N_it = 10;
 input_amp = abs(input); % Intensität eines Gaußstrahls
 input_phase = rand(size(input)); % Startwert für Phi (Zufallsverteilung)
 target_amp = abs(target); % Amplitude des Targets
