@@ -16,8 +16,8 @@ for i=1:N_it
     input_fft_amp = abs(input_fft);
     input_fft_phase = angle(input_fft);
     
-    start = image_plain_size / 2 - signal_size / 2;
-    stop = image_plain_size / 2 + signal_size / 2 - 1;
+    start = fix(image_plain_size(1) / 2) - fix(signal_size(1) / 2);
+    stop = fix(image_plain_size(1) / 2) + fix(signal_size(1) / 2 - 1);
     input_fft_amp(start:stop, start:stop) = target_amp;
     input_fft_phase(start:stop, start:stop) = target_phase;
 

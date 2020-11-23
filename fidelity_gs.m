@@ -1,5 +1,5 @@
 %% main
-
+clear all
 % Parameter Multimodefibre
 NA=0.1;
 nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
@@ -7,13 +7,15 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 load('optical_beam');           %simuliere einen Gaußschen Laserstrahl
+[optical_beam_size, ~] = size(optical_beam);
 load('modes_analyzis');
 
-for scale_factor=0.1:0.1:0.2  
-    % Modesolver parameters -> build modes
+for scale_factor=0.1:0.1:0.9
     scale_factor
-    gridSize = size(optical_beam) * scale_factor;           % gridsize for modesolver; Wert am:06.04: 50
-    modes = build_modes(nCore,nCladding,wavelength,coreRadius,gridSize(1));
+    % gridsize for modesolver; Wert am:06.04: 50
+    gridSize = fix(optical_beam_size * scale_factor);
+    % Modesolver parameters -> build modes
+    modes = build_modes(nCore,nCladding,wavelength,coreRadius,gridSize);
     [num_modes, ~, ~] = size(modes);
     for mode_target=1:num_modes
         % select mode
@@ -42,7 +44,7 @@ for scale_factor=0.1:0.1:0.2
         modulated_beam_fft_cutout_resized = imresize(modulated_beam_fft_cutout, size(mode_target_distribution_analyzis));
         % calcs fidelity with inner product
         g = innerProduct(mode_target_distribution_analyzis, modulated_beam_fft_cutout_resized);
-        fidelity_vals(scale_factor*10, mode_target) = abs(g)^2;
+        fidelity_vals(fix(scale_factor*10), mode_target) = abs(g)^2;
     end  
 end
 
