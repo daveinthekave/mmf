@@ -1,4 +1,4 @@
-function [input_modulated] = dcgs(input, target)
+function [slm_phase_mask] = dcgs(input, target)
 % double constraint gerchbergs-saxton
 N_it = 10; % Anzahl der Iterationen
 input_amp = abs(input); % Intensität eines Gaußstrahls
@@ -27,6 +27,6 @@ for i=1:N_it
 
     input = input_amp .* exp(1i*angle(target));
 end
-input_modulated = angle(target);
+slm_phase_mask = angle(target);
 end
 
