@@ -17,31 +17,12 @@ mode_target_distribution=squeeze(modes(mode_target,:,:));
 
 load('optical_beam');
 
-N_it = 10; % Anzahl der Iterationen
 holo_size = 600;
-input_phase = rand(holo_size, holo_size) * 2*pi - pi;
-input_amp = abs(imresize(optical_beam, holo_size/800));
-input = input_amp .* exp(1i*input_phase);
+optical_beam = imresize(optical_beam, holo_size/800);
 
-for i=1:N_it
-    input_fft = fftshift(fft2(input));
+gs_mask = dcgs(optical_beam, mode_target_distribution);
 
-    input_fft_amp = abs(input_fft);
-    input_fft_phase = angle(input_fft);
-    
-    start = holo_size / 2 - gridSize / 2;
-    stop = holo_size / 2 + gridSize / 2 - 1;
-    input_fft_amp(start:stop, start:stop) = abs(mode_target_distribution);
-    input_fft_phase(start:stop, start:stop) = angle(mode_target_distribution);
-
-    input_fft_complete = input_fft_amp .* exp(1i*input_fft_phase);
-
-    target = ifft2(ifftshift(input_fft_complete));
-    % target_shifted = fftshift(target);
-    input = input_amp .* exp(1i*angle(target));
-end
-gs_mask = angle(input);
-modulated_input = abs(imresize(optical_beam, holo_size/800)) .* exp(1i*gs_mask);
+modulated_input = abs(optical_beam) .* exp(1i*gs_mask); % abs richtig???
 modulated_input_fft = fftshift(fft2(modulated_input));
 figure;
 subplot(3, 2, 1);
