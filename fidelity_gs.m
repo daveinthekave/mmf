@@ -12,11 +12,17 @@ bitDepthSLM = 8;            % Bit
 
 %simuliere einen Gaußschen Laserstrahl
 load('optical_beam');
-desired_beam_size = 100;
+desired_beam_size = 800;
 [optical_beam_size, ~] = size(optical_beam);
 optical_beam = imresize(optical_beam, desired_beam_size/optical_beam_size);
 load('modes_analyzis');
 
+% plots:
+%       Modenabhängigkeit
+%       desired_beam_size variiren und scale ratio fest (pixelzahl)
+%       scale ratio variiren
+%       Bit variiren
+%       Nit erhöhen
 for scale_factor=0.1:0.1:0.9
     scale_factor
     % gridsize for modesolver; Wert am:06.04: 50
@@ -57,4 +63,4 @@ for scale_factor=0.1:0.1:0.9
 end
 
 % Visualisierung
-figure; imagesc(fidelity_vals);
+figure; imagesc([1 55], [0.1 0.9], fidelity_vals);
