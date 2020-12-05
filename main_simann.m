@@ -10,7 +10,7 @@ coreRadius = 25/2;              % in um
 % SLM & Superpixel parameters  
 bitDepthSLM = 8;            % Bit
 
-desired_beam_size = 100;
+desired_beam_size = 50;
 load('optical_beam');
 [optical_beam_size, ~] = size(optical_beam);
 optical_beam = imresize(optical_beam, desired_beam_size/optical_beam_size);
