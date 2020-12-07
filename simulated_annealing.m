@@ -1,18 +1,19 @@
 function [slm_phase_mask] = simulated_annealing(input, target)
 %UNTITLED Summary of this function goes here
-T_start = 200000;
+T_start = 0.2;
+n_it = 200000;
 
 start_phase = angle(fftshift(ifft2(target)));
 input_amp = abs(input);
 input = input_amp .* exp(1i*start_phase);
 
-num_pixel = 3;
+num_pixel = 20;
 probability_threshold = 1 - (num_pixel ./ size(input).^2);
 
 % calcs inital mode result
 previous_result = fftshift(fft2(input));
 previous_fidelity = abs(innerProduct(target, previous_result))^2;
-for T=T_start:-1:0
+for T=linspace(T_start, 0, n_it)
     current_input = input;
     index_mat = rand(size(input)) > probability_threshold(1);
     num_rand_pixel = sum(index_mat, 'all');
