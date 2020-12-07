@@ -3,6 +3,8 @@ function [slm_phase_mask] = simulated_annealing(input, target)
 T_start = 0.00002;  % sehr niedrig wegen kleinem delta_E
 n_it = 2000000;
 
+% Test
+
 % start_phase = angle(fftshift(ifft2(target)));
 % input_amp = abs(input);
 % input = input_amp .* exp(1i*start_phase);
