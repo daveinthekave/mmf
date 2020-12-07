@@ -1,13 +1,13 @@
 function [slm_phase_mask] = simulated_annealing(input, target)
-%UNTITLED Summary of this function goes here
-T_start = 0.2;
-n_it = 200000;
+% start temperatur und anzahl an iterationanzahl
+T_start = 0.00002;  % sehr niedrig wegen kleinem delta_E
+n_it = 2000000;
 
-start_phase = angle(fftshift(ifft2(target)));
-input_amp = abs(input);
-input = input_amp .* exp(1i*start_phase);
+% start_phase = angle(fftshift(ifft2(target)));
+% input_amp = abs(input);
+% input = input_amp .* exp(1i*start_phase);
 
-num_pixel = 20;
+num_pixel = 1;
 probability_threshold = 1 - (num_pixel ./ size(input).^2);
 
 % calcs inital mode result
@@ -38,6 +38,6 @@ for T=linspace(T_start, 0, n_it)
         end
     end
 end
-slm_phase_mask = angle(input);  % - angle(start_input);
+slm_phase_mask = angle(input);
 end
 
