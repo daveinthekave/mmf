@@ -19,8 +19,6 @@ for T=linspace(T_start, 0, n_it)
     num_rand_pixel = sum(index_mat, 'all');
     
     current_input(index_mat) = current_input(index_mat) .* exp(1i*rand(num_rand_pixel, 1)* 2*pi);
-    % rindex = fix(rand(1, 2) .* size(input)) + 1;
-    % current_input(rindex(1), rindex(2)) = current_input(rindex(1), rindex(2)) * exp(1i*rand() * 2 * pi);
     
     current_result = fftshift(fft2(current_input));
     current_fidelity = abs(innerProduct(target, current_result))^2;
