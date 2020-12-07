@@ -26,6 +26,6 @@ for T=T_start:-1:0
         end
     end
 end
-slm_phase_mask = angle(input);  % - angle(start_input);
+slm_phase_mask = angle(input) - angle(start_input);
 end
 
