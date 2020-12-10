@@ -3,7 +3,7 @@ function [slm_phase_mask] = simulated_annealing(input, target)
 % Berechnung der Phasenmaske, um target aus input zu erzeugen
 
 T_start = 200;                                              % Starttemperatur
-scaleFactor = 1e10;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
+scaleFactor = 1e9;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
 n_it = 20000;                                               % Anzahl der Iterationen
 
 % start_phase = angle(fftshift(ifft2(target)));
@@ -24,6 +24,7 @@ for T=linspace(T_start, 0, n_it)                                    % Temperatur
     
     current_input(index_mat) = current_input(index_mat) .* exp(1i*rand(num_rand_pixel, 1)* 2*pi);   % Veränderung der Pixel
     
+    
     % rindex = fix(rand(1, 2) .* size(input)) + 1;
     % current_input(rindex(1), rindex(2)) = current_input(rindex(1), rindex(2)) * exp(1i*rand() * 2 * pi);
     
@@ -31,7 +32,7 @@ for T=linspace(T_start, 0, n_it)                                    % Temperatur
     current_fidelity = abs(innerProduct(target, current_result))^2; % Berechnung der Fidelity
     
     if current_fidelity > previous_fidelity                         % Ergebnis hat sich gebessert
-        input = current_input;                                      % setze die neuen Werte
+        input = current_input; %fftshift(current_input);                                      % setze die neuen Werte
         previous_fidelity = current_fidelity;
 %     else                                                            % Ergebnis hat sich nicht verbessert
 %         delta_E = previous_fidelity - current_fidelity;             % Berechnung der Differenz
@@ -43,6 +44,6 @@ for T=linspace(T_start, 0, n_it)                                    % Temperatur
 %         end
     end
 end
-slm_phase_mask = angle(input);                              % Rückgabe des Ergebnisses
+slm_phase_mask = input;                              % Rückgabe des Ergebnisses
 end
 
