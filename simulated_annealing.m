@@ -2,7 +2,7 @@ function [slm_phase_mask] = simulated_annealing(input, target)
 close all
 % Berechnung der Phasenmaske, um target aus input zu erzeugen
 
-T_start = 200;                                              % Starttemperatur
+T_start = 20;                                              % Starttemperatur
 scaleFactor = 1e5;                                          % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
 n_it = 20000;                                               % Anzahl der Iterationen
 
@@ -24,14 +24,15 @@ for i=1:n_it                                    % Temperatur wird schrittweise v
     current_fidelity = abs(innerProduct(target, current_result))^2; % Berechnung der Fidelity
     fidelitys(i) = current_fidelity;
     
-    delta_E = previous_fidelity - current_fidelity;                 % Berechnung der Differenz
+    delta_E = abs(previous_fidelity - current_fidelity);                 % Berechnung der Differenz
     deltas(i) = delta_E;
     if current_fidelity > previous_fidelity                         % Ergebnis hat sich gebessert
-        input = current_input; %fftshift(current_input);                                      % setze die neuen Werte
+        input = current_input;                                      % setze die neuen Werte
         previous_fidelity = current_fidelity;
     else                                                            % Ergebnis hat sich nicht verbessert
-        T = T_start / n_it * i;
-        P = exp(-delta_E*scaleFactor/T);                                   % Boltzmann-Verteilung
+        T = T_start * (1 - i/ n_it);
+        P = exp(-delta_E*scaleFactor/T);                            % Boltzmann-Verteilung
+        expons(i) = -(delta_E*scaleFactor)/T;
         ps(i) = P;
         R = rand();                                                 % zufällige Referenzwahrscheinlichkeit
         if R < P                                                    % Schwelle wird überschritten
@@ -40,12 +41,14 @@ for i=1:n_it                                    % Temperatur wird schrittweise v
         end
     end
 end
-figure;
+figure('name', 'fidelitys');
 plot(fidelitys);
-figure;
+figure('name', 'Ps');
 plot(ps);
-figure;
-plot(deltas);
+figure('name', 'delta E');
+plot(deltas * scaleFactor);
+figure('name', 'exponents');
+plot(expons);
 
 slm_phase_mask = angle(input);                              % Rückgabe des Ergebnisses
 end
