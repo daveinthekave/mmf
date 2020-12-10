@@ -26,8 +26,8 @@ mode_target_distribution=squeeze(modes(mode_target,:,:));
 simann_mask = simulated_annealing(optical_beam, mode_target_distribution);
 
 % moduliere beam
-modulated_input = abs(optical_beam) .* exp(1i*angle(simann_mask)); % abs richtig???
-modulated_input_fft = fft2(fftshift(modulated_input));
+modulated_input = abs(optical_beam) .* exp(1i*simann_mask); % abs richtig???
+modulated_input_fft = fftshift(fft2(modulated_input));
 
 % plot dat
 figure;
