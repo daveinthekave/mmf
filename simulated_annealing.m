@@ -6,7 +6,6 @@ T_start = 200;                                              % Starttemperatur
 scaleFactor = 1e10;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
 n_it = 20000;                                               % Anzahl der Iterationen
 
-
 % start_phase = angle(fftshift(ifft2(target)));
 % input_amp = abs(input);
 % input = input_amp .* exp(1i*start_phase);
@@ -34,14 +33,14 @@ for T=linspace(T_start, 0, n_it)                                    % Temperatur
     if current_fidelity > previous_fidelity                         % Ergebnis hat sich gebessert
         input = current_input;                                      % setze die neuen Werte
         previous_fidelity = current_fidelity;
-    else                                                            % Ergebnis hat sich nicht verbessert
-        delta_E = previous_fidelity - current_fidelity;             % Berechnung der Differenz
-        P = exp(-delta_E*scaleFactor/T);                            % Boltzmann-Verteilung
-        R = rand();                                                 % zufällige Referenzwahrscheinlichkeit
-        if R < P                                                    % Schwelle wird überschritten
-            input = current_input;                                  % setze die neuen Werte
-            previous_fidelity = current_fidelity;
-        end
+%     else                                                            % Ergebnis hat sich nicht verbessert
+%         delta_E = previous_fidelity - current_fidelity;             % Berechnung der Differenz
+%         P = exp(-delta_E*scaleFactor/T);                            % Boltzmann-Verteilung
+%         R = rand();                                                 % zufällige Referenzwahrscheinlichkeit
+%         if R < P                                                    % Schwelle wird überschritten
+%             input = current_input;                                  % setze die neuen Werte
+%             previous_fidelity = current_fidelity;
+%         end
     end
 end
 slm_phase_mask = angle(input);                              % Rückgabe des Ergebnisses
