@@ -12,8 +12,8 @@ target_phase = angle(target);
 [signal_space_size, ~] = size(target);
 input = input_amp .* exp(1i*input_phase);
 
-start = round(free_space_size / 2) - round(signal_space_size / 2);
-stop = round(free_space_size / 2) + round(signal_space_size / 2) - 1;
+start = free_space_size / 2 - signal_space_size / 2;
+stop = free_space_size / 2 + signal_space_size / 2 - 1;
 
 for i=1:N_it
     input_fft = fftshift(fft2(input));
