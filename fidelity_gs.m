@@ -8,7 +8,7 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
 % SLM & Superpixel parameters  
-bitDepthSLM = 8;            % Bit
+bitDepthSLM = 8;                % Bit
 
 %simuliere einen Gaußschen Laserstrahl
 load('optical_beam');
@@ -59,7 +59,7 @@ for scale_factor=0.1:0.1:0.9
         % calcs fidelity with inner product
         g = innerProduct(mode_target_distribution_analyzis, modulated_beam_fft_cutout_resized);
         fidelity_vals(fix(scale_factor*10), mode_target) = abs(g)^2;
-    end  
+    end
 end
 
 % Visualisierung
