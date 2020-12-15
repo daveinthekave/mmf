@@ -3,17 +3,17 @@ close all
 % Berechnung der Phasenmaske, um target aus input zu erzeugen
 
 T_start = 20;                                              % Starttemperatur
-scaleFactor = 1e5;                                          % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
-n_it = 20000;                                               % Anzahl der Iterationen
+scaleFactor = 5e8;                                          % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
+n_it = 100000;                                               % Anzahl der Iterationen
 
-num_pixel = 1;                                              % Anzahl der Pixel, die (im Mittel) pro Iteration verändert werden
-probability_threshold = 1 - (num_pixel ./ size(input).^2);  % Variation der Pixeländerungsanzahl
+num_pixel = 1;                                                      % Anzahl der Pixel, die (im Mittel) pro Iteration verändert werden
+probability_threshold = 1 - (num_pixel ./ size(input).^2);          % Variation der Pixeländerungsanzahl
 
 % calcs inital mode result
 previous_result = fftshift(fft2(input));                            % Startwert
 previous_fidelity = abs(innerProduct(target, previous_result))^2;   % Startfidelity
 
-for i=1:n_it                                    % Temperatur wird schrittweise von T_start auf 0 erniedrigt
+for i=1:n_it                                                        % Temperatur wird schrittweise von T_start auf 0 erniedrigt
     current_input = input;
     index_mat = rand(size(input)) > probability_threshold(1);       % Matrix (bei Pixel P1 =1 --> P1 wird in dieser Iteration verändert)
     num_rand_pixel = sum(index_mat, 'all');                         % Anzahl der Pixel, die in dieser Iteration geändert werden
@@ -24,7 +24,7 @@ for i=1:n_it                                    % Temperatur wird schrittweise v
     current_fidelity = abs(innerProduct(target, current_result))^2; % Berechnung der Fidelity
     fidelitys(i) = current_fidelity;
     
-    delta_E = abs(previous_fidelity - current_fidelity);                 % Berechnung der Differenz
+    delta_E = abs(previous_fidelity - current_fidelity);            % Berechnung der Differenz
     deltas(i) = delta_E;
     if current_fidelity > previous_fidelity                         % Ergebnis hat sich gebessert
         input = current_input;                                      % setze die neuen Werte
