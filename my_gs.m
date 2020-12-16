@@ -9,10 +9,11 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
 % SLM & Superpixel parameters  
-bitDepthSLM = 12;                % Bit
+bitDepthSLM = 8;                % Bit
 
 desired_beam_size = 100;
 rel_area = 0.2;
+disc_in_loop = true;
 gridSize = round(desired_beam_size * sqrt(rel_area));
 
 modes = build_modes(nCore, nCladding, wavelength, coreRadius, gridSize);
@@ -21,7 +22,7 @@ mode_target_distribution = squeeze(modes(mode_target,:,:));
 load('optical_beam');
 optical_beam = imresize(optical_beam, desired_beam_size/800);
 
-[slm_mask, mask] = my_dcgs(optical_beam, mode_target_distribution, bitDepthSLM);
+[slm_mask, mask] = my_dcgs(optical_beam, mode_target_distribution, bitDepthSLM, disc_in_loop);
 
 normed_beam_amp = abs(optical_beam)./max(max(abs(optical_beam)));
 modulated = normed_beam_amp .* exp(1i*slm_mask);
