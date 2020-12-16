@@ -38,6 +38,10 @@ for i=0:n_it
     
     disc_phase = discretize(angle(new_input), phase_edges, phase_values);
     input = input_amp .* exp(1i*disc_phase);
+    current_res = fftshift(fft2(input_amp .* exp(1i*angle(new_input))));
+    disc_res = fftshift(fft2(input));
+    fidelity(1, i) = abs(innerProduct(target, current_res(mask)))^2;
+    fidelity(2, i) = abs(innerProduct(target, disc_res(mask)))^2;
 end
 slm_mask = angle(input);
 end
