@@ -1,5 +1,5 @@
 function [slm_mask, mask] = my_dcgs(input, target, bit_res)
-n_it = 1000;
+n_it = 100;
 
 free = size(input);
 signal = size(target);
@@ -25,7 +25,7 @@ start_phase = phase_values(1) - phase_step/2;
 stop_phase = start_phase + 2^bit_res * phase_step;
 phase_edges = start_phase:phase_step:stop_phase;
 
-for i=0:n_it
+for i=1:n_it
     input_fft = fftshift(fft2(input));
     
     fft_amp = abs(input_fft);
@@ -40,9 +40,12 @@ for i=0:n_it
     input = input_amp .* exp(1i*disc_phase);
     current_res = fftshift(fft2(input_amp .* exp(1i*angle(new_input))));
     disc_res = fftshift(fft2(input));
-    fidelity(1, i) = abs(innerProduct(target, current_res(mask)))^2;
-    fidelity(2, i) = abs(innerProduct(target, disc_res(mask)))^2;
+    fidelity(1, i) = abs(innerProduct(target, current_res(start:stop, start:stop)))^2;
+    fidelity(2, i) = abs(innerProduct(target, disc_res(start:stop, start:stop)))^2;
 end
 slm_mask = angle(input);
+x = 1:n_it;
+figure; plot(x, fidelity(1, :), x, fidelity(2, :));
+legend('normal phase', 'disc phase');
 end
 

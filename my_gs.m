@@ -9,7 +9,7 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
 % SLM & Superpixel parameters  
-bitDepthSLM = 8;                % Bit
+bitDepthSLM = 16;                % Bit
 
 desired_beam_size = 100;
 rel_area = 0.2;
