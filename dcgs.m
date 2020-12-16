@@ -3,16 +3,17 @@ function [slm_phase_mask] = dcgs(input, target, bit_res)
 
 N_it = 10;
 input_amp = abs(input); % Intensität eines Gaußstrahls
-input_phase = rand(size(input)); % Startwert für Phi (Zufallsverteilung)
-target_amp = abs(target); % Amplitude des Targets
+input_phase = rand(size(input)) * 2*pi; % Startwert für Phi (Zufallsverteilung)
+% normalizes target amp
+target_amp = abs(target); %./max(max(abs(target))); % Amplitude des Targets
 target_phase = angle(target);
 
-[image_plane_size, ~] = size(input);
-[signal_size, ~] = size(target);
+[free_space_size, ~] = size(input);
+[signal_space_size, ~] = size(target);
 input = input_amp .* exp(1i*input_phase);
 
-start = fix(image_plane_size / 2) - fix(signal_size / 2);
-stop = fix(image_plane_size / 2) + fix(signal_size / 2 - 1);
+start = free_space_size / 2 - signal_space_size / 2;
+stop = free_space_size / 2 + signal_space_size / 2 - 1;
 
 for i=1:N_it
     input_fft = fftshift(fft2(input));
@@ -31,7 +32,7 @@ for i=1:N_it
     input = input_amp .* exp(1i*angle(target));
 end
 
-desired_phase = angle(target);
+desired_phase = angle(input);
 % discretizes the phase
 phase_values = linspace(-pi, pi, 2^bit_res);
 phase_step = abs(phase_values(1) - phase_values(2));
