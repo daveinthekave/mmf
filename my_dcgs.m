@@ -1,5 +1,5 @@
 function [slm_mask, mask] = my_dcgs(input, target, bit_res)
-n_it = 100;
+n_it = 60;
 
 free = size(input);
 signal = size(target);
