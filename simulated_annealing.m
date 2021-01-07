@@ -4,16 +4,13 @@ function [slm_phase_mask, fidelity_vals] = simulated_annealing(input, target,mas
 
 T_start = 200;                                              % Starttemperatur
 scaleFactor = 10e8;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
-n_it = 40000;                                               % Anzahl der Iterationen
+n_it = 40e3;                                               % Anzahl der Iterationen
 
-
+% Propagationsparameter
 dx=8e-6;dy=dx;      % pixel size SLM [m]
 lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
-% start_phase = angle(fftshift(ifft2(target)));
-% input_amp = abs(input);
-% input = input_amp .* exp(1i*start_phase);
 
 num_pixel = 1;                                              % Anzahl der Pixel, die (im Mittel) pro Iteration verändert werden
 probability_threshold = 1 - (num_pixel ./ size(input).^2);  % Variation der Pixeländerungsanzahl

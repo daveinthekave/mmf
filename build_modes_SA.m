@@ -1,6 +1,4 @@
-function [modes1,map,map1] = build_modes(nCore,nCladding,wavelength,coreRadius,r)
-
-plot_distance=1;
+function [modes1,map,map1] = build_modes_SA(nCore,nCladding,wavelength,coreRadius,r, plot_distance)
 
 [modes,map, map1] = LP_modes(nCore,nCladding,wavelength,coreRadius,r,plot_distance);
 mat=[];
