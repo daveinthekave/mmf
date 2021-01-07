@@ -11,9 +11,6 @@ coreRadius = 25/2;              % in um
 bitDepthSLM = 8;            % Bit
 
 desired_beam_size = 40;
-load('optical_beam');
-[optical_beam_size, ~] = size(optical_beam);
-optical_beam = imresize(optical_beam, desired_beam_size/optical_beam_size);
 % Modesolver parameters -> build modes
 gridSize = desired_beam_size;            % gridsize for modesolver; Wert am:06.04: 50
 
