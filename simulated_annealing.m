@@ -7,6 +7,10 @@ scaleFactor = 10e8;                                         % Skalierungsfaktor,
 n_it = 400000;                                               % Anzahl der Iterationen
 
 
+dx=8e-6;dy=dx;      % pixel size SLM [m]
+lambda=532e-9;      % wavelength [m]
+dist=0.5;           % propagation distance [m]
+
 % start_phase = angle(fftshift(ifft2(target)));
 % input_amp = abs(input);
 % input = input_amp .* exp(1i*start_phase);
@@ -19,7 +23,7 @@ fidelity_vals=zeros(1,n_it);
 index=1;
 
 % calcs inital mode result
-previous_result = fftshift(fft2(input));                            % Startwert
+previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
 % previous_fidelity = abs(innerProduct(target, previous_result))^2;   % Startfidelity
 % previous_corr2=corr2(target.*conj(target), previous_result.*conj(previous_result));
 previous_fidelity = calcFidelity(target.*mask, previous_result.*mask);   % Startfidelity
@@ -35,7 +39,7 @@ for T=linspace(T_start, 0, n_it)                                    % Temperatur
     % rindex = fix(rand(1, 2) .* size(input)) + 1;
     % current_input(rindex(1), rindex(2)) = current_input(rindex(1), rindex(2)) * exp(1i*rand() * 2 * pi);
     
-    current_result = fftshift(fft2(current_input));                 % Berechnung des Ergebnisses mittels FFT
+    current_result = prop(current_input,dx,dy,lambda,dist);                % Berechnung des Ergebnisses mittels FFT
 %     current_fidelity = abs(innerProduct(target, current_result))^2; % Berechnung der Fidelity
     current_fidelity = calcFidelity(target.*mask, current_result.*mask);
 %     current_corr2=corr2(target.*conj(target), current_result.*conj(current_result));
