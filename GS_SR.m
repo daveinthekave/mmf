@@ -1,0 +1,84 @@
+%% Gerchberg Saxton
+
+% Parameter Multimodefibre
+NA=0.1;
+nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
+nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Doped Silica  
+wavelength = 0.532;             % in um
+coreRadius = 25/2;              % in um
+
+d_sig=400;          % gridsize for modesolver; Wert am:06.04: 50
+modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
+
+d_free=500;
+
+mask=zeros(d_free,d_free);
+mask(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=ones(d_sig,d_sig);
+
+%%
+target=squeeze(modes(11,:,:));
+
+target_amp=abs(target)./max(max(abs(target)));
+% 
+% target_amp(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=target;
+% 
+% target_amp=abs(target_amp)./max(max(abs(target_amp)));%250*abs(target)./max(max(abs(target)));
+
+target_phase=angle(target);
+
+input_amp=ones(d_free,d_free);
+% input_amp=abs(optical_beam);
+
+input_phase=ones(d_free,d_free);
+
+Input=input_amp.*exp(1i*input_phase);
+
+N=50;
+
+% discretizes the phase
+
+bit_resolution=2;
+
+phase_values = linspace(-pi, pi, 2^bit_resolution);
+phase_step = abs(phase_values(1) - phase_values(2));
+
+start_phase = phase_values(1) - phase_step/2;
+stop_phase = start_phase + 2^bit_resolution * phase_step;
+phase_edges = start_phase:phase_step:stop_phase;
+
+%% Popagation parameter
+dx=8e-6;dy=dx;      % pixel size SLM [m]
+lambda=532e-9;      % wavelength [m]
+dist=0.5;           % propagation distance [m]
+
+for i=1:N
+    target_plane=prop(Input,dx,dy,lambda,dist);
+    
+    target_plane_amp=abs(target_plane);
+    target_plane_phase=angle(target_plane);
+    
+    target_plane_amp(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=target_amp;
+    target_plane_phase(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=target_phase;
+    
+    backprop_field=target_plane_amp.*exp(1i*target_plane_phase);
+    
+    Input_phase_next_iteration=angle (prop(backprop_field,dx,dy,lambda,-dist));
+
+    disc_phase = discretize(Input_phase_next_iteration, phase_edges, phase_values);
+    
+    Input=input_amp.*exp(1i*disc_phase);
+end
+
+% plot dat
+figure;
+subplot(3, 2, 1);
+imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
+subplot(3, 2, 2);
+imagesc(target_phase);title('Phase of mode target distribution'); axis image
+subplot(3, 2, 3);
+imagesc(abs(target_plane .* mask));title('Amp moduliert in target plane'); axis image
+subplot(3, 2, 4);
+imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
+subplot(3, 2, 6);
+imagesc(disc_phase);title('Phasenmaske'); axis image
+
