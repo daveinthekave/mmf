@@ -4,7 +4,7 @@ function [slm_phase_mask, fidelity_vals] = simulated_annealing(input, target,mas
 
 T_start = 200;                                              % Starttemperatur
 scaleFactor = 10e8;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
-n_it = 40e3;                                               % Anzahl der Iterationen
+n_it = 25e3;                                               % Anzahl der Iterationen
 
 % Propagationsparameter
 dx=8e-6;dy=dx;      % pixel size SLM [m]
