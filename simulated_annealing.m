@@ -1,15 +1,32 @@
-function [slm_phase_mask, fidelity_vals] = simulated_annealing(input, target,mask)
+function [slm_phase_mask, fidelity_vals] = simulated_annealing(input, target, mask)
 
 % Berechnung der Phasenmaske, um target aus input zu erzeugen
 
 T_start = 200;                                              % Starttemperatur
 scaleFactor = 10e8;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
-n_it = 25e3;                                               % Anzahl der Iterationen
+n_it = 10e3;                                               % Anzahl der Iterationen
 
 % Propagationsparameter
 dx=8e-6;dy=dx;      % pixel size SLM [m]
 lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
+
+% Diskretisierung
+bit_resolution=8;
+
+phase_values = linspace(-pi, pi, 2^bit_resolution);
+phase_step = abs(phase_values(1) - phase_values(2));
+
+% abs_values = linspace(0, 1, 2^bit_resolution);
+% abs_step = abs(abs_values(1) - abs_values(2));
+
+start_phase = phase_values(1) - phase_step/2;
+stop_phase = start_phase + 2^bit_resolution * phase_step;
+phase_edges = start_phase:phase_step:stop_phase;
+
+% start_abs = abs_values(1) - abs_step/2;
+% stop_abs = start_abs + 2^bit_resolution * abs_step;
+% abs_edges = start_abs:abs_step:stop_abs;
 
 
 num_pixel = 1;                                              % Anzahl der Pixel, die (im Mittel) pro Iteration verändert werden
@@ -21,12 +38,21 @@ index=1;
 
 % calcs inital mode result
 previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
-% previous_fidelity = abs(innerProduct(target, previous_result))^2;   % Startfidelity
-% previous_corr2=corr2(target.*conj(target), previous_result.*conj(previous_result));
+
+% target_angle = discretize(angle(target), phase_edges, phase_values);
+% target = abs(target) * exp(1i*target_angle);
+% previous_result_angle = discretize(angle(previous_result), phase_edges, phase_values);
+% previous_result = abs(previous_result) * exp(1i*previous_result_angle);
 previous_fidelity = calcFidelity(target.*mask, previous_result.*mask);   % Startfidelity
 
 for T=linspace(T_start, 0, n_it)                                    % Temperatur wird schrittweise von T_start auf 0 erniedrigt
     current_input = input;
+    
+%     current_input_abs = discretize(abs(current_input), abs_edges, abs_values);
+%     current_input_abs = abs(current_input);
+%     current_input_angle = discretize(angle(current_input), phase_edges, phase_values);
+%     current_input = current_input_abs*exp(1i*current_input_angle);
+    
     index_mat = rand(size(input)) > (probability_threshold(1));       % Matrix (bei Pixel P1 =1 --> P1 wird in dieser Iteration verändert)
     num_rand_pixel = sum(index_mat, 'all');                         % Anzahl der Pixel, die in dieser Iteration geändert werden
     
