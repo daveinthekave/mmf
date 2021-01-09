@@ -7,12 +7,11 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-mode = 55;
 rel_area = 0.5;
 step = 10;
 N=50;
-for d_free=10:step:100
-    %d_free=100;
+for mode=1:1:55
+    d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -65,9 +64,9 @@ for d_free=10:step:100
     end
     modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
     modulated_signal = modulated_input(start:stop, start:stop);
-    fidelity_vals(d_free/step) = abs(innerProduct(target, modulated_signal))^2;
-    anz_pixel(d_free/step) = d_free ^2
+    fidelity_vals(mode) = abs(innerProduct(target, modulated_signal))^2;
+    mode_nums(mode) = mode
 end
 figure;
-plot(anz_pixel, fidelity_vals); title('Fidelity in Abhänigigkeit von Anzahl an Pixeln');
-xlabel('Anzahl der Pixel'); ylabel('Fidelity');
+plot(mode_nums, fidelity_vals); title('Fidelity in Abhänigigkeit von Mode');
+xlabel('Mode'); ylabel('Fidelity');
