@@ -1,5 +1,4 @@
 %% Gerchberg Saxton
-
 % Parameter Multimodefibre
 NA=0.1;
 nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
@@ -7,37 +6,28 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-d_sig=400;          % gridsize for modesolver; Wert am:06.04: 50
+rel_area = 0.5;
+N=50;
+d_free=100;
+mode = 55;
+d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
-
-d_free=500;
+target=squeeze(modes(mode,:,:));
 
 mask=zeros(d_free,d_free);
 mask(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=ones(d_sig,d_sig);
 
 %%
-target=squeeze(modes(11,:,:));
-
 target_amp=abs(target)./max(max(abs(target)));
-% 
-% target_amp(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=target;
-% 
-% target_amp=abs(target_amp)./max(max(abs(target_amp)));%250*abs(target)./max(max(abs(target)));
-
 target_phase=angle(target);
 
 input_amp=ones(d_free,d_free);
-% input_amp=abs(optical_beam);
-
 input_phase=ones(d_free,d_free);
 
 Input=input_amp.*exp(1i*input_phase);
 
-N=50;
-
 % discretizes the phase
-
-bit_resolution=2;
+bit_resolution=8;
 
 phase_values = linspace(-pi, pi, 2^bit_resolution);
 phase_step = abs(phase_values(1) - phase_values(2));
@@ -70,15 +60,15 @@ for i=1:N
 end
 
 % plot dat
-figure;
-subplot(3, 2, 1);
-imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
-subplot(3, 2, 2);
-imagesc(target_phase);title('Phase of mode target distribution'); axis image
-subplot(3, 2, 3);
-imagesc(abs(target_plane .* mask));title('Amp moduliert in target plane'); axis image
-subplot(3, 2, 4);
-imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
-subplot(3, 2, 6);
-imagesc(disc_phase);title('Phasenmaske'); axis image
+% figure;
+% subplot(3, 2, 1);
+% imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
+% subplot(3, 2, 2);
+% imagesc(target_phase);title('Phase of mode target distribution'); axis image
+% subplot(3, 2, 3);
+% imagesc(abs(target_plane .* mask));title('Amp moduliert in target plane'); axis image
+% subplot(3, 2, 4);
+% imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
+% subplot(3, 2, 6);
+% imagesc(disc_phase);title('Phasenmaske'); axis image
 
