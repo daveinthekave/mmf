@@ -15,7 +15,9 @@ modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
 target=squeeze(modes(mode,:,:));
 
 mask=zeros(d_free,d_free);
-mask(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=ones(d_sig,d_sig);
+start = round(d_free/2 - d_sig/2);
+stop = round(d_free/2 + d_sig/2 - 1);
+mask(start:stop, start:stop) = ones(d_sig,d_sig);
 
 %%
 target_amp=abs(target)./max(max(abs(target)));
@@ -47,8 +49,8 @@ for i=1:N
     target_plane_amp=abs(target_plane);
     target_plane_phase=angle(target_plane);
     
-    target_plane_amp(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=target_amp;
-    target_plane_phase(d_free/2-d_sig/2:d_free/2+d_sig/2-1,d_free/2-d_sig/2:d_free/2+d_sig/2-1)=target_phase;
+    target_plane_amp(start:stop, start:stop) = target_amp;
+    target_plane_phase(start:stop, start:stop) = target_phase;
     
     backprop_field=target_plane_amp.*exp(1i*target_plane_phase);
     
