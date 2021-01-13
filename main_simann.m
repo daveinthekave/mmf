@@ -17,11 +17,13 @@ dx=8e-6;dy=dx;      % pixel size SLM [m]
 lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
+verhaeltnis = 0.5;
+plot_distance = sqrt(1/verhaeltnis);
 plot_distance = sqrt(2);
 
 desired_beam_size = 50;
 % Modesolver parameters -> build modes
-gridSize = desired_beam_size;            % gridsize for modesolver; Wert am:06.04: 50
+gridSize = desired_beam_size;
 
 % simple_input = ones(optical_beam_size)*exp(li*2*pi*rand(optical_beam_size));
 
@@ -34,14 +36,13 @@ mode_target_distribution=squeeze(modes(mode_target,:,:));
 k=1/plot_distance;
 mask=(X-gridSize/2).^2+(Y-gridSize/2).^2<(k*gridSize/2).^2;
 
-% optical_beam=fft2(mode_target_distribution
-optical_beam=max(max(abs(mode_target_distribution)))*ones(gridSize,gridSize).*exp(1i*ones(gridSize,gridSize)*2*pi);
+optical_beam=max(max(abs(mode_target_distribution)))*ones(gridSize,gridSize); %.*exp(1i*ones(gridSize,gridSize)*2*pi);
 % optical_beam=ones(gridSize,gridSize).*exp(1i*ones(gridSize,gridSize)*2*pi);
 % simann_mask = simulated_annealing(ifft2(ifftshift(optical_beam)), mode_target_distribution);
 [simann_mask, fidelity_vals] = simulated_annealing(optical_beam, mode_target_distribution,mask);
 
 % moduliere beam
-modulated_input = abs(optical_beam) .* exp(1i*angle(simann_mask)); % abs richtig???
+modulated_input = abs(optical_beam) .* exp(1i*angle(simann_mask));
 modulated_input_prop = prop(modulated_input,dx,dy,lambda,dist);
 % modulated_input_prop = fftshift(fft2(modulated_input));
 
