@@ -12,14 +12,14 @@ lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
 % Diskretisierung
-bit_resolution=8;
-
-phase_values = linspace(-pi, pi, 2^bit_resolution);
-phase_step = abs(phase_values(1) - phase_values(2));
-
-start_phase = phase_values(1) - phase_step/2;
-stop_phase = start_phase + 2^bit_resolution * phase_step;
-phase_edges = start_phase:phase_step:stop_phase;
+% bit_resolution=8;
+% 
+% phase_values = linspace(-pi, pi, 2^bit_resolution);
+% phase_step = abs(phase_values(1) - phase_values(2));
+% 
+% start_phase = phase_values(1) - phase_step/2;
+% stop_phase = start_phase + 2^bit_resolution * phase_step;
+% phase_edges = start_phase:phase_step:stop_phase;
 
 % abs_values = linspace(0, 1, 2^bit_resolution);
 % abs_step = abs(abs_values(1) - abs_values(2));
