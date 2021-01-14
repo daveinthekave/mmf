@@ -70,4 +70,5 @@ for d_free=10:step:100
 end
 figure;
 plot(anz_pixel, fidelity_vals); title('Fidelity in Abhänigigkeit von Anzahl an Pixeln');
+axis([0 inf 0 1]);
 xlabel('Anzahl der Pixel'); ylabel('Fidelity');
