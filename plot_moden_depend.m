@@ -7,7 +7,7 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-rel_area = 0.5;
+rel_area = 0.3;
 step = 10;
 N=50;
 for mode=1:1:55

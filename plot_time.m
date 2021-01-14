@@ -6,15 +6,11 @@ nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
 nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Doped Silica  
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
-
 mode = 55;
 rel_area = 0.3;
+bit_resolution = 8;
 step = 10;
 N=50;
-
-% discretizes the phase
-bit_resolution=8;
-
 d_free=100;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
@@ -46,7 +42,9 @@ dx=8e-6;dy=dx;      % pixel size SLM [m]
 lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
-for i=1:N
+times(1) = 0.0;
+for i=2:N+1
+    tic
     target_plane=prop(Input,dx,dy,lambda,dist);
 
     target_plane_amp=abs(target_plane);
@@ -62,18 +60,15 @@ for i=1:N
     disc_phase = discretize(Input_phase_next_iteration, phase_edges, phase_values);
 
     Input=input_amp.*exp(1i*disc_phase);
+    times(i) = toc + times(i-1);
+    modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
+    modulated_signal = modulated_input(start:stop, start:stop);
+    fidelity_vals(i) = abs(innerProduct(target, modulated_signal))^2;
 end
 
-% plot dat
 figure;
-subplot(3, 2, 1);
-imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
-subplot(3, 2, 2);
-imagesc(target_phase);title('Phase of mode target distribution'); axis image
-subplot(3, 2, 3);
-imagesc(abs(target_plane .* mask));title('Amp moduliert in target plane'); axis image
-subplot(3, 2, 4);
-imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
-subplot(3, 2, 6);
-imagesc(disc_phase);title('Phasenmaske'); axis image
-
+plot(times, fidelity_vals); title('Fidelity über Zeit');
+xlabel('Zeit in s'); ylabel('Fidelity');
+figure;
+n_it = 1:51;
+plot(n_it, fidelity_vals); title('Fidelity über Anzahl an Iterationen');
