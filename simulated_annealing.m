@@ -38,10 +38,10 @@ index=1;
 % calcs inital mode result
 previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
 
-target_angle = discretize(angle(target), phase_edges, phase_values);
-target = abs(target) * exp(1i*target_angle);
-previous_result_angle = discretize(angle(previous_result), phase_edges, phase_values);
-previous_result = abs(previous_result) * exp(1i*previous_result_angle);
+% target_angle = discretize(angle(target), phase_edges, phase_values);
+% target = abs(target) * exp(1i*target_angle);
+% previous_result_angle = discretize(angle(previous_result), phase_edges, phase_values);
+% previous_result = abs(previous_result) * exp(1i*previous_result_angle);
 previous_fidelity = calcFidelity(target.*mask, previous_result.*mask);   % Startfidelity
 
 for T=linspace(T_start, 0, n_it)                                    % Temperatur wird schrittweise von T_start auf 0 erniedrigt
