@@ -15,7 +15,7 @@ step = 10;
 bit_resolution=8;
 
 N=50;
-for d_free=50:step:100
+for d_free=10:step:100
     %d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
@@ -71,5 +71,5 @@ for d_free=50:step:100
 end
 figure;
 plot(anz_pixel, fidelity_vals); title('Fidelity in Abhänigigkeit von Anzahl an Pixeln');
-axis([0 inf 0 1]);
+axis([0 inf 0.9 1]);
 xlabel('Anzahl der Pixel'); ylabel('Fidelity');
