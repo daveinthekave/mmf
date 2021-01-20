@@ -76,4 +76,3 @@ subplot(3, 2, 4);
 imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
 subplot(3, 2, 6);
 imagesc(disc_phase);title('Phasenmaske'); axis image
-
