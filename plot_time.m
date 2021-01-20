@@ -70,5 +70,5 @@ figure;
 plot(times, fidelity_vals); title('Fidelity über Zeit');
 xlabel('Zeit in s'); ylabel('Fidelity');
 figure;
-n_it = 1:51;
+n_it = 1:N+1;
 plot(n_it, fidelity_vals); title('Fidelity über Anzahl an Iterationen');
