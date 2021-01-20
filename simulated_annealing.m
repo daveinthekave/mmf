@@ -32,6 +32,7 @@ index=1;
 previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
 
 % target_angle = discretize(angle(target), phase_edges, phase_values);
+
 % target = abs(target) .* exp(1i*target_angle);
 % previous_result_angle = discretize(angle(previous_result), phase_edges, phase_values);
 % previous_result = abs(previous_result) .* exp(1i*previous_result_angle);
