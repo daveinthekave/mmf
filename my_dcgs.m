@@ -59,4 +59,3 @@ x = 1:n_it;
 figure; plot(x, fidelity(1, :), x, fidelity(2, :));
 legend('normal phase fidelity', 'disc phase fidelity');
 end
-
