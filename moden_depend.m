@@ -65,7 +65,7 @@ for mode=1:1:55
     modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
     modulated_signal = modulated_input(start:stop, start:stop);
     fidelity_vals(mode) = abs(innerProduct(target, modulated_signal))^2;
-    mode_nums(mode) = mode
+    mode_nums(mode) = mode;
 end
 figure;
 plot(mode_nums, fidelity_vals); title('Fidelity in Abhänigigkeit von Mode');
