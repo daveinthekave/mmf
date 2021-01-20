@@ -7,15 +7,14 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-mode = 55;
+mode = 14;
 rel_area = 0.3;
-step = 10;
 N=50;
 
 % discretizes the phase
 bit_resolution=8;
 
-d_free=40;
+d_free=30;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
 target=squeeze(modes(mode,:,:));

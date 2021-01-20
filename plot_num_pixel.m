@@ -7,7 +7,7 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-mode = 55;
+mode = 14;
 rel_area = 0.3;
 step = 10;
 
@@ -70,6 +70,7 @@ for d_free=10:step:100
     anz_pixel(d_free/step) = d_sig ^2
 end
 figure;
-plot(anz_pixel, fidelity_vals); title('Fidelity in Abhänigigkeit von Anzahl an Pixeln');
-axis([0 inf 0.9 1]);
-xlabel('Anzahl der Pixel'); ylabel('Fidelity');
+plot(anz_pixel, fidelity_vals, 'b--o'); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
+xline(256, 'r--');
+% axis([0 inf 0.9 1]);
+xlabel('Number of Pixel'); ylabel('Fidelity');

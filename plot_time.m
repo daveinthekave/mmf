@@ -6,11 +6,12 @@ nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
 nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Doped Silica  
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
-mode = 55;
+mode = 14;
 rel_area = 0.3;
 bit_resolution = 8;
 step = 10;
 N=50;
+
 d_free=100;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
@@ -67,8 +68,8 @@ for i=2:N+1
 end
 
 figure;
-plot(times, fidelity_vals); title('Fidelity über Zeit');
-xlabel('Zeit in s'); ylabel('Fidelity');
+plot(times, fidelity_vals, 'b--o'); title('Fidelity vs. time (rel. area 30%, free space 100x100, 8 bit, mode 14)');
+xlabel('Time in s'); ylabel('Fidelity');
 figure;
 n_it = 1:N+1;
 plot(n_it, fidelity_vals); title('Fidelity über Anzahl an Iterationen');
