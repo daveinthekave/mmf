@@ -70,8 +70,8 @@ imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
 subplot(3, 2, 2);
 imagesc(target_phase);title('Phase of mode target distribution'); axis image
 subplot(3, 2, 3);
-imagesc(abs(target_plane .* mask));title('Amp moduliert in target plane'); axis image
+imagesc(abs(target_plane .* mask));title('Modulated amp in target plane'); axis image
 subplot(3, 2, 4);
-imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
+imagesc(angle(target_plane .* mask));title('Modulated Phase in target plane'); axis image
 subplot(3, 2, 6);
-imagesc(disc_phase);title('Phasenmaske'); axis image
+imagesc(disc_phase);title('Phasemaske'); axis image

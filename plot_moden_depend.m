@@ -69,4 +69,5 @@ for mode=1:1:55
 end
 figure;
 plot(mode_nums, fidelity_vals, 'b--o'); title('Fidelity depending on Mode (rel. area 30%, free space 100x100, 8 bit)');
+axis([1 55 0 1]);
 xlabel('Mode'); ylabel('Fidelity');

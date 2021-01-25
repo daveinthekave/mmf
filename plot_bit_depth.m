@@ -67,4 +67,5 @@ for bit_resolution=2:1:16
 end
 figure;
 plot(pixel_depth, fidelity_vals, 'b--o'); title('Fidelity vs. bit resolution (rel. area 30%, free space 100x100, mode 14)');
+axis([1 16 0 1]);
 xlabel('Number of Bits'); ylabel('Fidelity');

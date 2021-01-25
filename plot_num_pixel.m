@@ -72,5 +72,5 @@ end
 figure;
 plot(anz_pixel, fidelity_vals, 'b--o'); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
 xline(256, 'r--');
-% axis([0 inf 0.9 1]);
+axis([0 inf 0 1]);
 xlabel('Number of Pixel'); ylabel('Fidelity');

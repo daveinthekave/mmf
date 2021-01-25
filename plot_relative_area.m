@@ -69,4 +69,5 @@ for rel_area=0.1:0.1:0.9
 end
 figure;
 plot(rel_areas, fidelity_vals, 'b--o'); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
+axis([0 1 0 1]);
 xlabel('Relative area'); ylabel('Fidelity');
