@@ -62,6 +62,13 @@ for mode=1:1:55
 
         Input=input_amp.*exp(1i*disc_phase);
     end
+
+%     [modulated_beam_fft_reconstruct_abs_cut,modulated_beam_fft_reconstruct_phase_cut]=cutout(modulated_beam_fft_reconstruct_abs,modulated_beam_fft_reconstruct_phase,area_analysis);
+% 
+%             zero_padding=size(mode_target_distribution_analyzis,1)-size(modulated_beam_fft_reconstruct_abs_cut,1);          
+%             modulated_beam_fft_reconstruct_abs_cut_padded=symmetric_zero_padding(modulated_beam_fft_reconstruct_abs_cut,zero_padding);
+%             modulated_beam_fft_reconstruct_phase_cut_padded=symmetric_zero_padding(modulated_beam_fft_reconstruct_phase_cut,zero_padding);
+%       
     modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
     modulated_signal = modulated_input(start:stop, start:stop);
     fidelity_vals(mode) = abs(innerProduct(target, modulated_signal))^2;

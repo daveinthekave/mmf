@@ -13,7 +13,6 @@ N=50;
 
 % discretizes the phase
 bit_resolution=8;
-
 d_free=100;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
@@ -24,6 +23,9 @@ start = round(d_free/2 - d_sig/2);
 stop = round(d_free/2 + d_sig/2 - 1);
 mask(start:stop, start:stop) = ones(d_sig,d_sig);
 
+[X,Y] = meshgrid(1:d_free,1:d_free);
+area_analysis=false(d_free,d_free);
+area_analysis((X-d_free/2).^2+(Y-d_free/2).^2 <= (d_sig/2-1)^2)=true;
 %%
 target_amp=abs(target)./max(max(abs(target)));
 target_phase=angle(target);
@@ -32,13 +34,6 @@ input_amp=ones(d_free,d_free);
 input_phase=ones(d_free,d_free);
 
 Input=input_amp.*exp(1i*input_phase);
-
-phase_values = linspace(-pi, pi, 2^bit_resolution);
-phase_step = abs(phase_values(1) - phase_values(2));
-
-start_phase = phase_values(1) - phase_step/2;
-stop_phase = start_phase + 2^bit_resolution * phase_step;
-phase_edges = start_phase:phase_step:stop_phase;
 
 %% Popagation parameter
 dx=8e-6;dy=dx;      % pixel size SLM [m]
@@ -56,9 +51,11 @@ for i=1:N
 
     backprop_field=target_plane_amp.*exp(1i*target_plane_phase);
 
-    Input_phase_next_iteration=angle (prop(backprop_field,dx,dy,lambda,-dist));
-
-    disc_phase = discretize(Input_phase_next_iteration, phase_edges, phase_values);
+    % correct phase
+    PhaseCorrected=angle(prop(backprop_field,dx,dy,lambda,-dist));
+    PhaseCorrected(PhaseCorrected<0) = PhaseCorrected(PhaseCorrected<0) + 2*pi;
+    
+    disc_phase = our_disc(PhaseCorrected, bit_resolution);
 
     Input=input_amp.*exp(1i*disc_phase);
 end
