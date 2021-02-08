@@ -7,9 +7,8 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-mode = 55;
+mode = 14;
 rel_area = 0.3;
-step = 10;
 N=50;
 
 % discretizes the phase
@@ -71,9 +70,8 @@ imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
 subplot(3, 2, 2);
 imagesc(target_phase);title('Phase of mode target distribution'); axis image
 subplot(3, 2, 3);
-imagesc(abs(target_plane .* mask));title('Amp moduliert in target plane'); axis image
+imagesc(abs(target_plane .* mask));title('Modulated amp in target plane'); axis image
 subplot(3, 2, 4);
-imagesc(angle(target_plane .* mask));title('Phase moduliert in target plane'); axis image
+imagesc(angle(target_plane .* mask));title('Modulated Phase in target plane'); axis image
 subplot(3, 2, 6);
-imagesc(disc_phase);title('Phasenmaske'); axis image
-
+imagesc(disc_phase);title('Phasemaske'); axis image

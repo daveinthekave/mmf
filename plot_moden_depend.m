@@ -8,10 +8,11 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
 rel_area = 0.3;
-step = 10;
+bit_resolution=8;
+d_free=100;
+
 N=50;
 for mode=1:1:55
-    d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -31,7 +32,6 @@ for mode=1:1:55
     Input=input_amp.*exp(1i*input_phase);
 
     % discretizes the phase
-    bit_resolution=8;
 
     phase_values = linspace(-pi, pi, 2^bit_resolution);
     phase_step = abs(phase_values(1) - phase_values(2));
@@ -68,5 +68,6 @@ for mode=1:1:55
     mode_nums(mode) = mode
 end
 figure;
-plot(mode_nums, fidelity_vals); title('Fidelity in Abhänigigkeit von Mode');
+plot(mode_nums, fidelity_vals, 'b--o'); title('Fidelity depending on Mode (rel. area 30%, free space 100x100, 8 bit)');
+axis([1 55 0 1]);
 xlabel('Mode'); ylabel('Fidelity');

@@ -7,11 +7,15 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
-mode = 55;
+mode = 14;
 rel_area = 0.3;
 step = 10;
+
+% discretizes the phase
+bit_resolution=8;
+
 N=50;
-for d_free=50:step:100
+for d_free=10:step:100
     %d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
@@ -30,9 +34,6 @@ for d_free=50:step:100
     input_phase=ones(d_free,d_free);
 
     Input=input_amp.*exp(1i*input_phase);
-
-    % discretizes the phase
-    bit_resolution=8;
 
     phase_values = linspace(-pi, pi, 2^bit_resolution);
     phase_step = abs(phase_values(1) - phase_values(2));
@@ -69,6 +70,7 @@ for d_free=50:step:100
     anz_pixel(d_free/step) = d_sig ^2
 end
 figure;
-plot(anz_pixel, fidelity_vals); title('Fidelity in Abhänigigkeit von Anzahl an Pixeln');
+plot(anz_pixel, fidelity_vals, 'b--o'); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
+xline(256, 'r--');
 axis([0 inf 0 1]);
-xlabel('Anzahl der Pixel'); ylabel('Fidelity');
+xlabel('Number of Pixel'); ylabel('Fidelity');
