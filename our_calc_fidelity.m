@@ -1,4 +1,6 @@
 function fidelity = our_calc_fidelity(target, modulated, area_analysis)
+% target: komplexes feld, größe signal space
+% modulated: komplexes feld, größe free space
     modulated_amp = abs(modulated);
     modulated_phase = angle(modulated);
     [modulated_amp_cut, modulated_phase_cut]=cutout(modulated_amp,modulated_phase, area_analysis);

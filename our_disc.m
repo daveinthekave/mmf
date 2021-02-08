@@ -1,4 +1,5 @@
 function disc_phase = our_disc(phase, resolution)
+% phase: phasenwerte matrix
 [rows, cols] = size(phase);
 disc_phase = zeros(rows, cols);
 if resolution > 1
