@@ -29,6 +29,7 @@ area_analysis((X-d_free/2).^2+(Y-d_free/2).^2 <= (d_sig/2-1)^2)=true;
 %%
 target_amp=abs(target)./max(max(abs(target)));
 target_phase=angle(target);
+fidelity_target = target_amp .* exp(1i*target_phase);
 
 input_amp=ones(d_free,d_free);
 input_phase=ones(d_free,d_free);
@@ -59,7 +60,8 @@ for i=1:N
 
     Input=input_amp.*exp(1i*disc_phase);
 end
-
+modulated = prop(Input,dx,dy,lambda,dist);
+fid = our_calc_fidelity(fidelity_target, modulated, area_analysis)
 % plot dat
 figure;
 subplot(3, 2, 1);
@@ -67,8 +69,8 @@ imagesc(target_amp);title('Amplitude of mode target distribution'); axis image
 subplot(3, 2, 2);
 imagesc(target_phase);title('Phase of mode target distribution'); axis image
 subplot(3, 2, 3);
-imagesc(abs(target_plane .* mask));title('Modulated amp in target plane'); axis image
+imagesc(abs(target_plane .* area_analysis));title('Modulated amp in target plane'); axis image
 subplot(3, 2, 4);
-imagesc(angle(target_plane .* mask));title('Modulated Phase in target plane'); axis image
+imagesc(angle(target_plane .* area_analysis));title('Modulated Phase in target plane'); axis image
 subplot(3, 2, 6);
 imagesc(disc_phase);title('Phasemaske'); axis image
