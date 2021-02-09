@@ -11,6 +11,8 @@ lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
 % Diskretisierungssparameter
+
+% Davids Version einpflegen
 phase_values = linspace(-pi, pi, 2^bit_resolution);
 phase_step = abs(phase_values(1) - phase_values(2));
 start_phase = phase_values(1) - phase_step/2;
@@ -25,8 +27,16 @@ end
 % Iterationsparameter
 fidelity_vals=zeros(1,n_it);
 index=1;
+
 previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
-previous_fidelity = calcFidelity(target.*mask, previous_result.*mask);      % Startfidelity
+
+[previous_result_abs_cut,previous_result_angle_cut] = cutout(abs(previous_result), angle(previous_result), mask);
+zero_padding = size(target,1)-size(previous_result_abs_cut,1);          
+previous_result_abs_cut_padded = symmetric_zero_padding(previous_result_abs_cut,zero_padding);
+previous_result_angle_cut_padded = symmetric_zero_padding(previous_result_angle_cut,zero_padding);
+previous_result_cut_padded = previous_result_abs_cut_padded.*exp(1i*previous_result_angle_cut_padded);
+previous_fidelity = (abs(innerProduct(target, previous_result_cut_padded)))^2;      % Startfidelity
+
 T = T_start;
 delta_T = T_start/n_it;
 
@@ -40,9 +50,16 @@ while T>0
     current_input_angle = discretize(angle(current_input), phase_edges, phase_values);
     current_input = abs(current_input).*exp(1i*current_input_angle);
     % Propagation
+%     tic;
     current_result = prop(current_input,dx,dy,lambda,dist); 
+%     t_prop = toc;
     % Fidelity-Berechnung
-    current_fidelity = calcFidelity(target.*mask, current_result.*mask);    
+    [current_result_abs_cut,current_result_angle_cut] = cutout(abs(current_result), angle(current_result), mask);
+    zero_padding = size(target,1)-size(current_result_abs_cut,1);          
+    current_result_abs_cut_padded = symmetric_zero_padding(current_result_abs_cut,zero_padding);
+    current_result_angle_cut_padded = symmetric_zero_padding(current_result_angle_cut,zero_padding);
+    current_result_cut_padded = current_result_abs_cut_padded.*exp(1i*current_result_angle_cut_padded);
+    current_fidelity = (abs(innerProduct(target, current_result_cut_padded)))^2;  
     % Abspeichern des Werts
     fidelity_vals(index) = current_fidelity;
     index=index+1;
