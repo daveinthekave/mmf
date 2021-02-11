@@ -6,12 +6,13 @@ nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
 nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Doped Silica  
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
-mode = 55;
+
+mode = 14;
 rel_area = 0.3;
-step = 10;
+d_free=100;
+    
 N=50;
 for bit_resolution=2:1:16
-    d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -65,5 +66,6 @@ for bit_resolution=2:1:16
     pixel_depth(bit_resolution - 1) = bit_resolution
 end
 figure;
-plot(pixel_depth, fidelity_vals); title('Fidelity in Abhänigigkeit von Phasenauflösung (in Bit)');
-xlabel('Anzahl Bit'); ylabel('Fidelity');
+plot(pixel_depth, fidelity_vals, 'b--o'); title('Fidelity vs. bit resolution (rel. area 30%, free space 100x100, mode 14)');
+axis([1 16 0 1]);
+xlabel('Number of Bits'); ylabel('Fidelity');

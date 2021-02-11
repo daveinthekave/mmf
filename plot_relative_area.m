@@ -6,12 +6,14 @@ nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
 nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Doped Silica  
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
-mode = 55;
+mode = 14;
 
 step = 10;
+d_free=100;
+bit_resolution=8;
+
 N=50;
 for rel_area=0.1:0.1:0.9
-    d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -31,8 +33,6 @@ for rel_area=0.1:0.1:0.9
     Input=input_amp.*exp(1i*input_phase);
 
     % discretizes the phase
-    bit_resolution=8;
-
     phase_values = linspace(-pi, pi, 2^bit_resolution);
     phase_step = abs(phase_values(1) - phase_values(2));
 
@@ -68,5 +68,6 @@ for rel_area=0.1:0.1:0.9
     rel_areas(round(rel_area*10)) = rel_area
 end
 figure;
-plot(rel_areas, fidelity_vals); title('Fidelity in Abhänigigkeit von relativer Fläche');
-xlabel('Relative Fläche'); ylabel('Fidelity');
+plot(rel_areas, fidelity_vals, 'b--o'); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
+axis([0 1 0 1]);
+xlabel('Relative area'); ylabel('Fidelity');

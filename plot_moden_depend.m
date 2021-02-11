@@ -8,37 +8,30 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
 rel_area = 0.3;
-step = 10;
+bit_resolution=8;
+d_free=100;
+
 N=50;
 for mode=1:1:55
-    d_free=100;
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
 
-    mask=zeros(d_free,d_free);
     start = round(d_free/2 - d_sig/2);
     stop = round(d_free/2 + d_sig/2 - 1);
-    mask(start:stop, start:stop) = ones(d_sig,d_sig);
 
+    [X,Y] = meshgrid(1:d_free,1:d_free);
+    area_analysis=false(d_free,d_free);
+    area_analysis((X-d_free/2).^2+(Y-d_free/2).^2 <= (d_sig/2-1)^2)=true;
     %%
     target_amp=abs(target)./max(max(abs(target)));
     target_phase=angle(target);
+    fidelity_target = target_amp .* exp(1i*target_phase);
 
     input_amp=ones(d_free,d_free);
     input_phase=ones(d_free,d_free);
 
     Input=input_amp.*exp(1i*input_phase);
-
-    % discretizes the phase
-    bit_resolution=8;
-
-    phase_values = linspace(-pi, pi, 2^bit_resolution);
-    phase_step = abs(phase_values(1) - phase_values(2));
-
-    start_phase = phase_values(1) - phase_step/2;
-    stop_phase = start_phase + 2^bit_resolution * phase_step;
-    phase_edges = start_phase:phase_step:stop_phase;
 
     %% Popagation parameter
     dx=8e-6;dy=dx;      % pixel size SLM [m]
@@ -56,17 +49,20 @@ for mode=1:1:55
 
         backprop_field=target_plane_amp.*exp(1i*target_plane_phase);
 
-        Input_phase_next_iteration=angle (prop(backprop_field,dx,dy,lambda,-dist));
+        % correct phase
+        PhaseCorrected=angle(prop(backprop_field,dx,dy,lambda,-dist));
+        PhaseCorrected(PhaseCorrected<0) = PhaseCorrected(PhaseCorrected<0) + 2*pi;
 
-        disc_phase = discretize(Input_phase_next_iteration, phase_edges, phase_values);
+        disc_phase = our_disc(PhaseCorrected, bit_resolution);
 
         Input=input_amp.*exp(1i*disc_phase);
     end
-    modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
-    modulated_signal = modulated_input(start:stop, start:stop);
-    fidelity_vals(mode) = abs(innerProduct(target, modulated_signal))^2;
-    mode_nums(mode) = mode;
+    
+    modulated = prop(Input,dx,dy,lambda,dist);
+    fidelity_vals(mode) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+    mode_nums(mode) = mode
 end
 figure;
-plot(mode_nums, fidelity_vals); title('Fidelity in Abhänigigkeit von Mode');
+plot(mode_nums, fidelity_vals, 'b--o'); title('Fidelity depending on Mode (rel. area 30%, free space 100x100, 8 bit)');
+axis([1 55 0 1]);
 xlabel('Mode'); ylabel('Fidelity');
