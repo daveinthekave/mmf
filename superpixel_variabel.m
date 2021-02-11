@@ -1,4 +1,4 @@
-function [inputSuper] = superpixel_variabel(input, superPixelSize, bitDepthSLM, max)
+function [inputSuper] = superpixel_variabel(input, superPixelSize, bitDepthSLM, max, sp_count)
 % input is matrix of complex values
 %%
 % clear all
@@ -17,7 +17,11 @@ inputSuper=zeros(m*superPixelSize,n*superPixelSize); % prepare target image
 valsAmp=round(linspace(0,max/2,2^(bitDepthSLM)),4);
 ampStep=abs(valsAmp(1)-valsAmp(2));
 
+if bitDepthSLM == 1
+    scalePhase=round(linspace(0,pi,2^(bitDepthSLM)),3);
+else
 scalePhase=round(linspace(0,2*pi,2^(bitDepthSLM)),3);
+end
 phaseStep=abs(scalePhase(1)-scalePhase(2));
 %% correct phase
 PhaseCorrected=angle(input);
@@ -96,33 +100,69 @@ for i=1:m
         
         % baue Superpixel
         
-%         Superpixel=[repmat(phasenWert1,superPixelSize/2),repmat(phasenWert2,superPixelSize/2);
-%                     repmat(phasenWert2,superPixelSize/2),repmat(phasenWert1,superPixelSize/2)];
+        switch sp_count
         
-        Superpixel=[repmat(phasenWert1,superPixelSize/3),repmat(phasenWert2,superPixelSize/3),repmat(phasenWert1,superPixelSize/3);
-                    repmat(phasenWert2,superPixelSize/3),repmat(phasenWert1,superPixelSize/3),repmat(phasenWert2,superPixelSize/3);
-                    repmat(phasenWert1,superPixelSize/3),repmat(phasenWert2,superPixelSize/3),repmat(phasenWert1,superPixelSize/3)];
+            case 2 
+                Superpixel=[repmat(phasenWert1,superPixelSize/2),repmat(phasenWert2,superPixelSize/2);
+                    repmat(phasenWert2,superPixelSize/2),repmat(phasenWert1,superPixelSize/2)];
+        
+            case 3
+        
+                Superpixel=[repmat(phasenWert1,superPixelSize/3),repmat(phasenWert2,superPixelSize/3),repmat(phasenWert1,superPixelSize/3);
+                            repmat(phasenWert2,superPixelSize/3),repmat(phasenWert1,superPixelSize/3),repmat(phasenWert2,superPixelSize/3);
+                            repmat(phasenWert1,superPixelSize/3),repmat(phasenWert2,superPixelSize/3),repmat(phasenWert1,superPixelSize/3)];
+
+            case 4
+                        
+                Superpixel=[repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4);
+                    repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4);
+                    repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4);
+                    repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4);];
+
+            case 5
                 
-%         Superpixel=[repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4);
-%                     repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4);
-%                     repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4);
-%                     repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4),repmat(phasenWert2,superPixelSize/4),repmat(phasenWert1,superPixelSize/4);];
+                Superpixel=[repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5), repmat(phasenWert1,superPixelSize/5),repmat(phasenWert2,superPixelSize/5), repmat(phasenWert1,superPixelSize/5);
+                    repmat(phasenWert2,superPixelSize/5),repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5),repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5);
+                    repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5), repmat(phasenWert1,superPixelSize/5),repmat(phasenWert2,superPixelSize/5), repmat(phasenWert1,superPixelSize/5);
+                    repmat(phasenWert2,superPixelSize/5),repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5),repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5);
+                    repmat(phasenWert1,superPixelSize/5), repmat(phasenWert2,superPixelSize/5), repmat(phasenWert1,superPixelSize/5),repmat(phasenWert2,superPixelSize/5), repmat(phasenWert1,superPixelSize/5);];
+                    
+                    
+            case 6
+                
+                Superpixel=[repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6);
+                    repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6);
+                    repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6);
+                    repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6);
+                    repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6);
+                    repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6);];                
 
-%             Superpixel=[repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6);
-%                     repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6);
-%                     repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6);
-%                     repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6);
-%                     repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6), repmat(phasenWert1,superPixelSize/6),repmat(phasenWert2,superPixelSize/6);
-%                     repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6), repmat(phasenWert2,superPixelSize/6),repmat(phasenWert1,superPixelSize/6);];                
+            case 7
+                
+                Superpixel=[repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7);
+                    repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7);
+                    repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7);
+                    repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7);
+                    repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7);
+                    repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7);
+                    repmat(phasenWert1,superPixelSize/7), repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7),repmat(phasenWert2,superPixelSize/7), repmat(phasenWert1,superPixelSize/7);];
 
-%             Superpixel=[repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
-%                 repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);
-%                 repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
-%                 repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);
-%                 repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
-%                 repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);
-%                 repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
-%                 repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);];
+            case 8
+                
+                Superpixel=[repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
+                repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);
+                repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
+                repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);
+                repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
+                repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);
+                repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8), repmat(phasenWert1,superPixelSize/8),repmat(phasenWert2,superPixelSize/8);
+                repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8), repmat(phasenWert2,superPixelSize/8),repmat(phasenWert1,superPixelSize/8);];
+
+            otherwise
+                Superpixel=[repmat(phasenWert1,superPixelSize/2),repmat(phasenWert2,superPixelSize/2);
+                    repmat(phasenWert2,superPixelSize/2),repmat(phasenWert1,superPixelSize/2)];
+            
+        end
 
         inputSuper((i-1)*superPixelSize+1:((i-1)*superPixelSize+1)+superPixelSize-1,...
             (j-1)*superPixelSize+1:((j-1)*superPixelSize+1)+superPixelSize-1)...

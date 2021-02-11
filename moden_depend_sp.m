@@ -82,14 +82,15 @@ modes_analyzis = build_modes(nCore,nCladding,wavelength,coreRadius,gridSize*supe
 
 mode_target_distribution_analyzis=squeeze(modes_analyzis(mode_target,:,:));
 
-xo_pinhole=600;yo_pinhole=400;r_pinhole=19;
+xo_pinhole=600;yo_pinhole=400;r_pinhole=15;
 
 step_var=1; %Stufenbreite bei der Variation des Zentrums
 edge_var=4; %Grenze bei der Variation des Zentrums
 
 xo_pinhole_var=xo_pinhole;%-edge_var:step_var:xo_pinhole+edge_var;
 yo_pinhole_var=yo_pinhole;%-edge_var:step_var:yo_pinhole+edge_var;
-r_pinhole_var=r_pinhole;%-edge_var:step_var:r_pinhole+edge_var;
+r_pinhole_var=r_pinhole-edge_var:step_var:30;
+%r_pinhole_var=r_pinhole-edge_var:step_var:r_pinhole+edge_var;
 
 % xo_pinhole_var=xo_pinhole; 
 % yo_pinhole_var=yo_pinhole;
