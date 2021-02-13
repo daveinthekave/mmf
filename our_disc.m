@@ -17,7 +17,7 @@ for i=1:rows
         if isempty(find(b, 1))
             phasenWert=scalePhase(end);
         else
-            [m1,n1]=find(b);
+            [~,n1]=find(b);
 
             if a(n1(1))<0.5*phaseStep
                 phasenWert=scalePhase(n1(1));

@@ -16,7 +16,7 @@ dist=0.5;                       % Propagationsdistanz [m]
 
 % Freiheitsgrade
 n_it = 60e3;                     % Iterationsanzahl
-bit_resolution = 6;             % Bitauflösung
+bit_resolution = 8;             % Bitauflösung
 desired_signal_size = 30;       % Größe des Signalbereichs
 verhaeltnis = .2;               % Verhältnis zwischen Signal- und Gesamtbereich
 mode_target = 14;               % Nummer der Mode
