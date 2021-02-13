@@ -1,5 +1,5 @@
 clear all;
-for bt=1:1:8
+for bt=1:1:16
 %% main
 
 % Parameter Multimodefibre
@@ -89,7 +89,7 @@ edge_var=4; %Grenze bei der Variation des Zentrums
 
 xo_pinhole_var=xo_pinhole;%-edge_var:step_var:xo_pinhole+edge_var;
 yo_pinhole_var=yo_pinhole;%-edge_var:step_var:yo_pinhole+edge_var;
-r_pinhole_var=r_pinhole;%-edge_var:step_var:r_pinhole+edge_var;
+r_pinhole_var=r_pinhole-edge_var:step_var:r_pinhole+edge_var;
 
 % xo_pinhole_var=xo_pinhole; 
 % yo_pinhole_var=yo_pinhole;

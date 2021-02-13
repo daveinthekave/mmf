@@ -20,7 +20,7 @@ for d_free=10:step:100
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
-
+    
     mask=zeros(d_free,d_free);
     start = round(d_free/2 - d_sig/2);
     stop = round(d_free/2 + d_sig/2 - 1);
@@ -64,11 +64,14 @@ for d_free=10:step:100
 
         Input=input_amp.*exp(1i*disc_phase);
     end
+
     modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
     modulated_signal = modulated_input(start:stop, start:stop);
     fidelity_vals(d_free/step) = abs(innerProduct(target, modulated_signal))^2;
     anz_pixel(d_free/step) = d_sig ^2
+
 end
+
 figure;
 plot(anz_pixel, fidelity_vals, 'b--o'); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
 xline(256, 'r--');
