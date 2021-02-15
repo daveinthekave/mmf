@@ -17,10 +17,8 @@ d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
 target=squeeze(modes(mode,:,:));
 
-mask=zeros(d_free,d_free);
 start = round(d_free/2 - d_sig/2);
 stop = round(d_free/2 + d_sig/2 - 1);
-mask(start:stop, start:stop) = ones(d_sig,d_sig);
 
 %%
 target_amp=abs(target)./max(max(abs(target)));
