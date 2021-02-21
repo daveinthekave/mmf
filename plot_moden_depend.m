@@ -63,6 +63,8 @@ for mode=1:1:55
     ssim_vals(mode) = complex_ssim(fidelity_target, modulated, area_analysis);
     mode_nums(mode) = mode
 end
+save('mode-fids', 'fidelity_vals');
+save('mode-ssim', 'ssim_vals');
 figure;
 plot(mode_nums, fidelity_vals, 'b--o', mode_nums, ssim_vals); title('Fidelity depending on Mode (rel. area 30%, free space 100x100, 8 bit)');
 axis([1 55 0 1]);

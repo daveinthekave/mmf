@@ -64,6 +64,8 @@ for bit_resolution=1:1:16
     pixel_depth(bit_resolution) = bit_resolution
     
 end
+save('bit-fids', 'fidelity_vals');
+save('bit-ssim', 'ssim_vals');
 figure;
 plot(pixel_depth, fidelity_vals, 'b--o', pixel_depth, ssim_vals); title('Fidelity vs. bit resolution (rel. area 30%, free space 100x100, mode 14)');
 axis([1 16 0 1]);

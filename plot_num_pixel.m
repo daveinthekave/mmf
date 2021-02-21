@@ -68,7 +68,8 @@ for d_free=10:step:100
     anz_pixel(d_free/step) = d_sig ^2
 
 end
-
+save('pixel-fids', 'fidelity_vals');
+save('pixel-ssim', 'ssim_vals');
 figure;
 plot(anz_pixel, fidelity_vals, 'b--o', anz_pixel, ssim_vals); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
 xline(256, 'r--');

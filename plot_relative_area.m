@@ -64,6 +64,8 @@ for rel_area=0.1:0.1:0.9
     ssim_vals(round(rel_area*10)) = complex_ssim(fidelity_target, modulated, area_analysis);
     rel_areas(round(rel_area*10)) = rel_area
 end
+save('vals/area-fids', 'fidelity_vals');
+save('vals/area-ssim', 'ssim_vals');
 figure;
 plot(rel_areas, fidelity_vals, 'b--o', rel_areas, ssim_vals); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
 axis([0 1 0 1]);
