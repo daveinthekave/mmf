@@ -1,5 +1,5 @@
 % main
-clear all;
+% clear all;
 
 % Parameter Multimodefibre
 NA=0.1;
@@ -15,14 +15,17 @@ lambda=532e-9;                  % Wellenlänge [m]
 dist=0.5;                       % Propagationsdistanz [m]
 
 % Freiheitsgrade
-n_it = 60e3;                     % Iterationsanzahl
+n_it = 50e3;                     % Iterationsanzahl
 bit_resolution = 8;             % Bitauflösung
-desired_signal_size = 30;       % Größe des Signalbereichs
-verhaeltnis = .2;               % Verhältnis zwischen Signal- und Gesamtbereich
+verhaeltnis = .3;               % Verhältnis zwischen Signal- und Gesamtbereich
 mode_target = 14;               % Nummer der Mode
+% desired_signal_size = 30;       % Größe des Signalbereichs
+
+gridSize = 75;                 % Größe des Freespace
+desired_signal_size =  round(gridSize*sqrt(verhaeltnis));
 
 % Modenerzeugung
-gridSize = round(desired_signal_size/sqrt(verhaeltnis));
+% gridSize = round(desired_signal_size/sqrt(verhaeltnis));
 modes=build_modes_SA(nCore,nCladding,wavelength,coreRadius, desired_signal_size, plot_distance);       
 mode_target_distribution=squeeze(modes(mode_target,:,:));
 
@@ -38,7 +41,7 @@ optical_beam = ones(gridSize,gridSize);
 % Algorithmus
 tic;
 [simann_mask, fidelity_vals] = simulated_annealing(optical_beam, mode_target_distribution, mask, n_it, bit_resolution);
-t_total = toc/60;
+t_total = toc/60;       % Algorithmus-Dauer [min]
 
 % Modulation
 modulated_input = abs(optical_beam) .* exp(1i*angle(simann_mask));

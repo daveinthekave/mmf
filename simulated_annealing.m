@@ -11,8 +11,6 @@ lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
 % Diskretisierungssparameter
-
-% Davids Version einpflegen
 phase_values = linspace(-pi, pi, 2^bit_resolution);
 phase_step = abs(phase_values(1) - phase_values(2));
 start_phase = phase_values(1) - phase_step/2;
@@ -28,18 +26,22 @@ end
 fidelity_vals=zeros(1,n_it);
 index=1;
 
+% Ergebnisse für den ersten Durchlauf
 previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
 previous_fidelity = our_calc_fidelity(target, previous_result, mask);
+% previous_fidelity = complex_ssim(target, previous_result, mask);
 
 T = T_start;
 delta_T = T_start/n_it;
 
 while T>0      
     current_input = input;
+    
     % Pixeländerung
     change_indX = round(rand*(input_size-1))+1;
     change_indY = round(rand*(input_size-1))+1;
     current_input(change_indX, change_indY) = current_input(change_indX, change_indY) * exp(1i*rand*2*pi);
+    
     % Diskretisierung
     current_input_angle = discretize(angle(current_input), phase_edges, phase_values);
     current_input = abs(current_input).*exp(1i*current_input_angle);
@@ -47,15 +49,20 @@ while T>0
 %     current_input_angle(current_input_angle<0) = current_input_angle(current_input_angle<0) + 2*pi;
 %     current_input_angle_disc = our_disc(current_input_angle, bit_resolution);
 %     current_input = abs(current_input).*exp(1i*current_input_angle_disc);
+
     % Propagation
 %     tic;
     current_result = prop(current_input,dx,dy,lambda,dist); 
 %     t_prop = toc;
+
     % Fidelity-Berechnung    
     current_fidelity = our_calc_fidelity(target, current_result, mask);
+%     current_fidelity = complex_ssim(target, current_result, mask);
+
     % Abspeichern des Werts
     fidelity_vals(index) = current_fidelity;
     index=index+1;
+    
     % Vergleich der Fidelity
     if current_fidelity > previous_fidelity                         % Ergebnis hat sich gebessert
         input = current_input;                                      % setze die neuen Werte
