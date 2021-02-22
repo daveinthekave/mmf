@@ -8,12 +8,11 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 mode = 14;
 
-step = 10;
-d_free=100;
+d_free=50;
 bit_resolution=8;
 
 N=50;
-for rel_area=0.1:0.1:0.9
+for rel_area=0.01:0.01:0.98
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -60,13 +59,16 @@ for rel_area=0.1:0.1:0.9
     end
     
     modulated = prop(Input,dx,dy,lambda,dist);
-    fidelity_vals(round(rel_area*10)) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
-    ssim_vals(round(rel_area*10)) = complex_ssim(fidelity_target, modulated, area_analysis);
-    rel_areas(round(rel_area*10)) = rel_area
+    fidelity_vals(round(rel_area*100)) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+    %ssim_vals(round(rel_area*100)) = complex_ssim(fidelity_target, modulated, area_analysis);
+    rel_areas(round(rel_area*100)) = rel_area
 end
-save('vals/area-fids', 'fidelity_vals');
-save('vals/area-ssim', 'ssim_vals');
+root = strcat('Plots/Gerchberg-Saxton/', num2str(d_free));
+mkdir(root);
+save(strcat(root, '/fidelity_vals'), 'fidelity_vals');
+save(strcat(root, '/rel_vals'), 'rel_areas');
+% save(strcat(root, num2str(d_free), 'area-ssim'), 'ssim_vals');
 figure;
-plot(rel_areas, fidelity_vals, 'b--o', rel_areas, ssim_vals); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
+plot(rel_areas, fidelity_vals, 'b--o'); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
 axis([0 1 0 1]);
 xlabel('Relative area'); ylabel('Fidelity');

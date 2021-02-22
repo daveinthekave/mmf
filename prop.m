@@ -11,7 +11,7 @@ k=2*pi/lambda ;
 kernel=exp(-1i*sqrt(k^2-r)*dist);   % ang spec kernel
 
 fft_HH=fft_H(:,:).*kernel;
-fft_HH=fftshift(fft_HH);
+fft_HH=ifftshift(fft_HH);
 
 Ud=ifft2(fft_HH);
 

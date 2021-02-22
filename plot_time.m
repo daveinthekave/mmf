@@ -12,7 +12,7 @@ bit_resolution = 8;
 step = 10;
 N=50;
 
-d_free=100;
+d_free=150;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
 target=squeeze(modes(mode,:,:));
