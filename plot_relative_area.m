@@ -8,37 +8,30 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 mode = 14;
 
-step = 10;
-d_free=100;
+d_free=50;
 bit_resolution=8;
 
 N=50;
-for rel_area=0.1:0.1:0.9
+for rel_area=0.01:0.01:0.98
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
 
-    mask=zeros(d_free,d_free);
     start = round(d_free/2 - d_sig/2);
     stop = round(d_free/2 + d_sig/2 - 1);
-    mask(start:stop, start:stop) = ones(d_sig,d_sig);
 
+    [X,Y] = meshgrid(1:d_free,1:d_free);
+    area_analysis=false(d_free,d_free);
+    area_analysis((X-d_free/2).^2+(Y-d_free/2).^2 <= (d_sig/2-1)^2)=true;
     %%
     target_amp=abs(target)./max(max(abs(target)));
     target_phase=angle(target);
+    fidelity_target = target_amp .* exp(1i*target_phase);
 
     input_amp=ones(d_free,d_free);
     input_phase=ones(d_free,d_free);
 
     Input=input_amp.*exp(1i*input_phase);
-
-    % discretizes the phase
-    phase_values = linspace(-pi, pi, 2^bit_resolution);
-    phase_step = abs(phase_values(1) - phase_values(2));
-
-    start_phase = phase_values(1) - phase_step/2;
-    stop_phase = start_phase + 2^bit_resolution * phase_step;
-    phase_edges = start_phase:phase_step:stop_phase;
 
     %% Popagation parameter
     dx=8e-6;dy=dx;      % pixel size SLM [m]
@@ -56,17 +49,25 @@ for rel_area=0.1:0.1:0.9
 
         backprop_field=target_plane_amp.*exp(1i*target_plane_phase);
 
-        Input_phase_next_iteration=angle (prop(backprop_field,dx,dy,lambda,-dist));
+        % correct phase
+        PhaseCorrected=angle(prop(backprop_field,dx,dy,lambda,-dist));
+        PhaseCorrected(PhaseCorrected<0) = PhaseCorrected(PhaseCorrected<0) + 2*pi;
 
-        disc_phase = discretize(Input_phase_next_iteration, phase_edges, phase_values);
+        disc_phase = our_disc(PhaseCorrected, bit_resolution);
 
         Input=input_amp.*exp(1i*disc_phase);
     end
-    modulated_input = prop(Input,dx,dy,lambda,dist) .* mask;
-    modulated_signal = modulated_input(start:stop, start:stop);
-    fidelity_vals(round(rel_area*10)) = abs(innerProduct(target, modulated_signal))^2;
-    rel_areas(round(rel_area*10)) = rel_area
+    
+    modulated = prop(Input,dx,dy,lambda,dist);
+    fidelity_vals(round(rel_area*100)) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+    %ssim_vals(round(rel_area*100)) = complex_ssim(fidelity_target, modulated, area_analysis);
+    rel_areas(round(rel_area*100)) = rel_area
 end
+root = strcat('Plots/Gerchberg-Saxton/', num2str(d_free));
+mkdir(root);
+save(strcat(root, '/fidelity_vals'), 'fidelity_vals');
+save(strcat(root, '/rel_vals'), 'rel_areas');
+% save(strcat(root, num2str(d_free), 'area-ssim'), 'ssim_vals');
 figure;
 plot(rel_areas, fidelity_vals, 'b--o'); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
 axis([0 1 0 1]);

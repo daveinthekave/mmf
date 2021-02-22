@@ -13,7 +13,7 @@ N=50;
 
 % discretizes the phase
 bit_resolution=8;
-d_free=100;
+d_free=75;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
 target=squeeze(modes(mode,:,:));
@@ -60,7 +60,7 @@ for i=1:N
 end
 modulated = prop(Input,dx,dy,lambda,dist);
 fid = our_calc_fidelity(fidelity_target, modulated, area_analysis)
-ssim_val = complex_ssim(fidelity_target, modulated, area_analysis)
+%ssim_val = complex_ssim(fidelity_target, modulated, area_analysis)
 % plot dat
 figure;
 subplot(3, 2, 1);
