@@ -14,7 +14,7 @@ for br=1:1:8
 % discretizes the phase
 bit_resolution=br
 
-delta_diff = 1e-6;
+delta_diff = 1e-4;
 
 for d_free=10:step:200
     
