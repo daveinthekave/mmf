@@ -14,7 +14,8 @@ for br=1:1:8
 % discretizes the phase
 bit_resolution=br
 
-N=200;
+delta_diff = 1e-6;
+
 for d_free=10:step:200
     
     d_sig = round(d_free * sqrt(rel_area));
@@ -41,8 +42,10 @@ for d_free=10:step:200
     dx=8e-6;dy=dx;      % pixel size SLM [m]
     lambda=532e-9;      % wavelength [m]
     dist=0.5;           % propagation distance [m]
-
-    for i=1:N
+    
+    current_diff = 1;
+    old_fid = 1;
+    while current_diff > delta_diff
         target_plane=prop(Input,dx,dy,lambda,dist);
 
         target_plane_amp=abs(target_plane);
@@ -60,6 +63,11 @@ for d_free=10:step:200
         disc_phase = our_disc(PhaseCorrected, bit_resolution);
 
         Input=input_amp.*exp(1i*disc_phase);
+        
+        modulated = prop(Input,dx,dy,lambda,dist);
+        current_fid = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+        current_diff = abs(current_fid - old_fid);
+        old_fid = current_fid;
     end
     
     modulated = prop(Input,dx,dy,lambda,dist);
