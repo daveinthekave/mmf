@@ -8,15 +8,16 @@ wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 
 mode = 14;
-rel_area = 0.3;
+rel_area = 0.5;
 step = 10;
-
+for br=1:1:8
 % discretizes the phase
-bit_resolution=8;
+bit_resolution=br
 
-N=50;
-for d_free=10:step:100
-    %d_free=100;
+delta_diff = 1e-4;
+
+for d_free=10:step:200
+    
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -41,8 +42,10 @@ for d_free=10:step:100
     dx=8e-6;dy=dx;      % pixel size SLM [m]
     lambda=532e-9;      % wavelength [m]
     dist=0.5;           % propagation distance [m]
-
-    for i=1:N
+    
+    current_diff = 1;
+    old_fid = 1;
+    while current_diff > delta_diff
         target_plane=prop(Input,dx,dy,lambda,dist);
 
         target_plane_amp=abs(target_plane);
@@ -60,6 +63,11 @@ for d_free=10:step:100
         disc_phase = our_disc(PhaseCorrected, bit_resolution);
 
         Input=input_amp.*exp(1i*disc_phase);
+        
+        modulated = prop(Input,dx,dy,lambda,dist);
+        current_fid = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+        current_diff = abs(current_fid - old_fid);
+        old_fid = current_fid;
     end
     
     modulated = prop(Input,dx,dy,lambda,dist);
@@ -68,10 +76,13 @@ for d_free=10:step:100
     anz_pixel(d_free/step) = d_sig ^2
 
 end
-save('pixel-fids', 'fidelity_vals');
-save('pixel-ssim', 'ssim_vals');
-figure;
-plot(anz_pixel, fidelity_vals, 'b--o', anz_pixel, ssim_vals); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
-xline(256, 'r--');
-axis([0 inf 0 1]);
-xlabel('Number of Pixel'); ylabel('Fidelity');
+root = strcat('Plots/Gerchberg-Saxton/adapt-fid/', 'bit_resolution/', num2str(bit_resolution), '-bit', '/');
+mkdir(root);
+save(strcat(root, '/fidelity_vals'), 'fidelity_vals');
+save(strcat(root, '/anz_pixel'), 'anz_pixel');
+end
+% figure;
+% plot(anz_pixel, fidelity_vals, 'b--o', anz_pixel, ssim_vals); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
+% xline(256, 'r--');
+% axis([0 inf 0 1]);
+% xlabel('Number of Pixel'); ylabel('Fidelity');
