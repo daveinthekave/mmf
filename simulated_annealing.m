@@ -25,6 +25,7 @@ end
 % Iterationsparameter
 fidelity_vals=zeros(1,n_it);
 index=1;
+eps = 1e-6;
 
 % Ergebnisse für den ersten Durchlauf
 previous_result = prop(input,dx,dy,lambda,dist);                            % Startwert
@@ -51,9 +52,7 @@ while T>0
 %     current_input = abs(current_input).*exp(1i*current_input_angle_disc);
 
     % Propagation
-%     tic;
     current_result = prop(current_input,dx,dy,lambda,dist); 
-%     t_prop = toc;
 
     % Fidelity-Berechnung    
     current_fidelity = our_calc_fidelity(target, current_result, mask);
@@ -77,11 +76,12 @@ while T>0
         end
     end     
     % Abbruchbedingung
-%     if ((index > 5000) && (mod(index,1000) == 0))
-%         if ((fidelity_vals(index) - fidelity_vals(index-1000) < 1e-3) && (fidelity_vals(index-500) - fidelity_vals(index-1000) < 1e-3))
-%             T = 0;
-%         end
-%     end
+    if ((index > 10000) && (mod(index,10000) == 0))
+        if ((fidelity_vals(index) - fidelity_vals(index-10000) < eps) && (fidelity_vals(index-5000) - fidelity_vals(index-10000) < eps))
+            T = 0;
+            fidelity_vals = fidelity_vals(1:index-1);
+        end
+    end
     T = T - delta_T;
 end
 slm_phase_mask = input;                              % Rückgabe des Ergebnisses

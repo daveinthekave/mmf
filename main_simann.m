@@ -15,13 +15,13 @@ lambda=532e-9;                  % Wellenlänge [m]
 dist=0.5;                       % Propagationsdistanz [m]
 
 % Freiheitsgrade
-n_it = 50e3;                     % Iterationsanzahl
+n_it = 1000e3;                     % Iterationsanzahl
 bit_resolution = 8;             % Bitauflösung
-verhaeltnis = .3;               % Verhältnis zwischen Signal- und Gesamtbereich
+verhaeltnis = .4;               % Verhältnis zwischen Signal- und Gesamtbereich
 mode_target = 14;               % Nummer der Mode
 % desired_signal_size = 30;       % Größe des Signalbereichs
 
-gridSize = 75;                 % Größe des Freespace
+gridSize = 125;                 % Größe des Freespace
 desired_signal_size =  round(gridSize*sqrt(verhaeltnis));
 
 % Modenerzeugung
@@ -31,8 +31,7 @@ mode_target_distribution=squeeze(modes(mode_target,:,:));
 
 % Maske für Fidelity-Berechnung
 [X,Y] = meshgrid(1:gridSize,1:gridSize);
-k = sqrt(verhaeltnis);
-mask = (X-gridSize/2).^2+(Y-gridSize/2).^2<(k*gridSize/2).^2;
+mask = (X-gridSize/2).^2+(Y-gridSize/2).^2<(desired_signal_size/2).^2;
 
 % Laserstrahl
 % optical_beam = max(max(abs(mode_target_distribution)))*ones(gridSize,gridSize);
