@@ -66,15 +66,15 @@ while T>0
     if current_fidelity > previous_fidelity                         % Ergebnis hat sich gebessert
         input = current_input;                                      % setze die neuen Werte
         previous_fidelity = current_fidelity;
-    else                                                            % Ergebnis hat sich nicht verbessert
-        delta_E = previous_fidelity - current_fidelity;             % Berechnung der Differenz
-        P = exp(-delta_E*scaleFactor/T);                            % Boltzmann-Verteilung
-        R = rand();                                                 % zufällige Referenzwahrscheinlichkeit
-        if R < P                                                    % Schwelle wird überschritten
-            input = current_input;                                  % setze die neuen Werte
-            previous_fidelity = current_fidelity;
-        end
-    end     
+%     else                                                            % Ergebnis hat sich nicht verbessert
+%         delta_E = previous_fidelity - current_fidelity;             % Berechnung der Differenz
+%         P = exp(-delta_E*scaleFactor/T);                            % Boltzmann-Verteilung
+%         R = rand();                                                 % zufällige Referenzwahrscheinlichkeit
+%         if R < P                                                    % Schwelle wird überschritten
+%             input = current_input;                                  % setze die neuen Werte
+%             previous_fidelity = current_fidelity;
+%         end
+%     end     
     % Abbruchbedingung
     if ((index > 10000) && (mod(index,10000) == 0))
         if ((fidelity_vals(index) - fidelity_vals(index-10000) < eps) && (fidelity_vals(index-5000) - fidelity_vals(index-10000) < eps))
