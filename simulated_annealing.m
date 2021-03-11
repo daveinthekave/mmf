@@ -85,5 +85,4 @@ while T>0
     T = T - delta_T;
 end
 slm_phase_mask = input;                              % Rückgabe des Ergebnisses
-end
 
