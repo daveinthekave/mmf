@@ -74,7 +74,7 @@ while T>0
 %             input = current_input;                                  % setze die neuen Werte
 %             previous_fidelity = current_fidelity;
 %         end
-%     end     
+    end     
     % Abbruchbedingung
     if ((index > 10000) && (mod(index,10000) == 0))
         if ((fidelity_vals(index) - fidelity_vals(index-10000) < eps) && (fidelity_vals(index-5000) - fidelity_vals(index-10000) < eps))
