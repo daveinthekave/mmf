@@ -74,13 +74,12 @@ while T>0
 %             input = current_input;                                  % setze die neuen Werte
 %             previous_fidelity = current_fidelity;
 %         end
-%     end     
-        % Abbruchbedingung
-        if ((index > 10000) && (mod(index,10000) == 0))
-            if ((fidelity_vals(index) - fidelity_vals(index-10000) < eps) && (fidelity_vals(index-5000) - fidelity_vals(index-10000) < eps))
-                T = 0;
-                fidelity_vals = fidelity_vals(1:index-1);
-            end
+    end     
+    % Abbruchbedingung
+    if ((index > 10000) && (mod(index,10000) == 0))
+        if ((fidelity_vals(index) - fidelity_vals(index-10000) < eps) && (fidelity_vals(index-5000) - fidelity_vals(index-10000) < eps))
+            T = 0;
+            fidelity_vals = fidelity_vals(1:index-1);
         end
     end
     T = T - delta_T;
