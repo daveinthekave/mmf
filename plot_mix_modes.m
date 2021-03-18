@@ -6,26 +6,25 @@ nCore = 1.4607;                 % at 20 deg C -> Pure Silica/ fused Silica
 nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Doped Silica  
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
-
 mode = 14;
-rel_area = 0.5;
-step = 10;
+N = 50;
 
-root = fullfile('plots/Gerchberg-Saxton/adapt-fid/', 'bit_resolution/', num2str(bit_resolution), '-bit', '/');
+d_free = 50;
+rel_area= 0.5;
+d_sig = round(d_free * sqrt(rel_area));
+root = fullfile('plots', 'mix-plot', num2str(d_free));
 mkdir(root);
 
-for br=1:1:8
-% discretizes the phase
-bit_resolution=br
+load('all_mix_vector');
+brs = [1 4 8];
+for bit_resolution=brs
+    disp(bit_resolution)
 
-delta_diff = 1e-4;
-j = 1;
-for d_free=10:step:200
-    
-    d_sig = round(d_free * sqrt(rel_area));
-    if mod(d_sig, 2) == 0
-        modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
-        target=squeeze(modes(mode,:,:));
+    for index=1:size(all_mix_vector, 1)
+        current_vec = squeeze(all_mix_vector(index, :, :));
+
+        modes = build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
+        target = mix_modes(modes, current_vec);
 
         start = round(d_free/2 - d_sig/2);
         stop = round(d_free/2 + d_sig/2 - 1);
@@ -48,9 +47,7 @@ for d_free=10:step:200
         lambda=532e-9;      % wavelength [m]
         dist=0.5;           % propagation distance [m]
 
-        current_diff = 1;
-        old_fid = 1;
-        while current_diff > delta_diff
+        for i=1:N
             target_plane=prop(Input,dx,dy,lambda,dist);
 
             target_plane_amp=abs(target_plane);
@@ -68,24 +65,13 @@ for d_free=10:step:200
             disc_phase = our_disc(PhaseCorrected, bit_resolution);
 
             Input=input_amp.*exp(1i*disc_phase);
-
-            modulated = prop(Input,dx,dy,lambda,dist);
-            current_fid = our_calc_fidelity(fidelity_target, modulated, area_analysis);
-            current_diff = abs(current_fid - old_fid);
-            old_fid = current_fid;
         end
 
         modulated = prop(Input,dx,dy,lambda,dist);
-        fidelity_vals(j) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
-        anz_pixel(j) = d_sig ^2
+        fidelity_vals(index) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+        %ssim_vals(round(rel_area*100)) = complex_ssim(fidelity_target, modulated, area_analysis);
+        rel_areas(index) = rel_area;
     end
+    save(fullfile(root, strcat(num2str(bit_resolution), '-bit-fidelity_vals')), 'fidelity_vals');
 end
-
-save(strcat(root, '/fidelity_vals'), 'fidelity_vals');
-save(strcat(root, '/anz_pixel'), 'anz_pixel');
-end
-% figure;
-% plot(anz_pixel, fidelity_vals, 'b--o', anz_pixel, ssim_vals); title('Fidelity vs. number of signal pixel (rel. area 30%, 8 bit, mode 14)');
-% xline(256, 'r--');
-% axis([0 inf 0 1]);
-% xlabel('Number of Pixel'); ylabel('Fidelity');
+save(fullfile(root, 'rel_vals'), 'rel_areas');
