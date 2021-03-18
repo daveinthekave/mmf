@@ -12,7 +12,7 @@ lambda=532e-9;                  % Wellenlänge [m]
 dist=0.5;                       % Propagationsdistanz [m]
 
 % Freiheitsgrade
-n_it = 1;                  % Iterationsanzahl
+n_it = 1000e3;                  % Iterationsanzahl
 verhaeltnis = 0.4;
 
 load("all_mix_vector.mat");
