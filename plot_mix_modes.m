@@ -7,25 +7,24 @@ nCladding = sqrt(nCore^2-NA^2); % 1.4440375;      % at 20 deg C -> Fluorine-Dope
 wavelength = 0.532;             % in um
 coreRadius = 25/2;              % in um
 mode = 14;
+N = 50;
 
-d_free = 150;
+d_free = 50;
 rel_area= 0.5;
 d_sig = round(d_free * sqrt(rel_area));
 root = fullfile('plots', 'mix-plot', num2str(d_free));
 mkdir(root);
 
-all_mix_vector = load('all_mix_vector');
+load('all_mix_vector');
 brs = [1 4 8];
 for bit_resolution=brs
-disp(bit_resolution)
+    disp(bit_resolution)
 
-N=50;
-j = 1;
-for index=size(all_mix_vector, 1)
-    current_vec = all_mix_vector(index, :, :);
-    if mod(d_sig, 2) == 0
-        modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
-        target=squeeze(modes(mode,:,:));
+    for index=1:size(all_mix_vector, 1)
+        current_vec = squeeze(all_mix_vector(index, :, :));
+
+        modes = build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
+        target = mix_modes(modes, current_vec);
 
         start = round(d_free/2 - d_sig/2);
         stop = round(d_free/2 + d_sig/2 - 1);
@@ -69,17 +68,10 @@ for index=size(all_mix_vector, 1)
         end
 
         modulated = prop(Input,dx,dy,lambda,dist);
-        fidelity_vals(j) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+        fidelity_vals(index) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
         %ssim_vals(round(rel_area*100)) = complex_ssim(fidelity_target, modulated, area_analysis);
-        rel_areas(j) = rel_area;
-        j = j + 1;
+        rel_areas(index) = rel_area;
     end
-end
-save(fullfile(root, strcat(num2str(br), '-bit-fidelity_vals')), 'fidelity_vals');
-% save(strcat(root, num2str(d_free), 'area-ssim'), 'ssim_vals');
-% figure;
-% plot(rel_areas, fidelity_vals, 'b--o'); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
-% axis([0 1 0 1]);
-% xlabel('Relative area'); ylabel('Fidelity');
+    save(fullfile(root, strcat(num2str(bit_resolution), '-bit-fidelity_vals')), 'fidelity_vals');
 end
 save(fullfile(root, 'rel_vals'), 'rel_areas');
