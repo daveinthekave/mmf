@@ -9,12 +9,17 @@ coreRadius = 25/2;              % in um
 mode = 14;
 
 d_free=150;
-brs = [1 2 4 6];
+root = fullfile('plots', '2nd-hauptplot', num2str(d_free));
+mkdir(root);
+
+brs = [1 4 8];
 for br=brs
-bit_resolution=br
+bit_resolution=br;
+disp(br)
 
 N=50;
-for rel_area=0.01:0.01:0.98
+j = 1;
+for rel_area=0.02:0.02:0.98
     d_sig = round(d_free * sqrt(rel_area));
     modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
     target=squeeze(modes(mode,:,:));
@@ -61,17 +66,16 @@ for rel_area=0.01:0.01:0.98
     end
     
     modulated = prop(Input,dx,dy,lambda,dist);
-    fidelity_vals(round(rel_area*100)) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
+    fidelity_vals(j) = our_calc_fidelity(fidelity_target, modulated, area_analysis);
     %ssim_vals(round(rel_area*100)) = complex_ssim(fidelity_target, modulated, area_analysis);
-    rel_areas(round(rel_area*100)) = rel_area;
+    rel_areas(j) = rel_area;
+    j = j + 1;
 end
-root = strcat('plots/hauptplot/', num2str(d_free));
-mkdir(root);
-save(strcat(root, '/', num2str(br), '-bit-fidelity_vals'), 'fidelity_vals');
+save(fullfile(root, strcat(num2str(br), '-bit-fidelity_vals')), 'fidelity_vals');
 % save(strcat(root, num2str(d_free), 'area-ssim'), 'ssim_vals');
 % figure;
 % plot(rel_areas, fidelity_vals, 'b--o'); title('Fidelity vs. relative area (Free space 100x100, 8 bit, mode 14)');
 % axis([0 1 0 1]);
 % xlabel('Relative area'); ylabel('Fidelity');
 end
-save(strcat(root, '/rel_vals'), 'rel_areas');
+save(fullfile(root, 'rel_vals'), 'rel_areas');
