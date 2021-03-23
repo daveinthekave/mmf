@@ -2,7 +2,7 @@ function [slm_phase_mask, fidelity_vals] = simulated_annealing(input, target, ma
 
 % Algorithmusparameter
 T_start = 200;                                              % Starttemperatur
-scaleFactor = 10e8;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
+% scaleFactor = 10e8;                                         % Skalierungsfaktor, da delta_E sehr klein (fidelity ändert sich wenig bei Änderung eines Pixels)
 input_size = max(size(input));
 
 % Propagationsparameter
@@ -11,16 +11,16 @@ lambda=532e-9;      % wavelength [m]
 dist=0.5;           % propagation distance [m]
 
 % Diskretisierungssparameter
-phase_values = linspace(-pi, pi, 2^bit_resolution);
-phase_step = abs(phase_values(1) - phase_values(2));
-start_phase = phase_values(1) - phase_step/2;
-stop_phase = start_phase + 2^bit_resolution * phase_step;
-phase_edges = start_phase:phase_step:stop_phase;
-if (bit_resolution == 1)
-    versatz = 0; %pi/4;
-    phase_values = [-pi/2-versatz, pi/2-versatz];
-    phase_edges = [-pi, 0, pi];
-end
+% phase_values = linspace(-pi, pi, 2^bit_resolution);
+% phase_step = abs(phase_values(1) - phase_values(2));
+% start_phase = phase_values(1) - phase_step/2;
+% stop_phase = start_phase + 2^bit_resolution * phase_step;
+% phase_edges = start_phase:phase_step:stop_phase;
+% if (bit_resolution == 1)
+%     versatz = 0; %pi/4;
+%     phase_values = [-pi/2-versatz, pi/2-versatz];
+%     phase_edges = [-pi, 0, pi];
+% end
 
 % Iterationsparameter
 fidelity_vals=zeros(1,n_it);
@@ -44,12 +44,12 @@ while T>0
     current_input(change_indX, change_indY) = current_input(change_indX, change_indY) * exp(1i*rand*2*pi);
     
     % Diskretisierung
-    current_input_angle = discretize(angle(current_input), phase_edges, phase_values);
-    current_input = abs(current_input).*exp(1i*current_input_angle);
-%     current_input_angle = angle(current_input);
-%     current_input_angle(current_input_angle<0) = current_input_angle(current_input_angle<0) + 2*pi;
-%     current_input_angle_disc = our_disc(current_input_angle, bit_resolution);
-%     current_input = abs(current_input).*exp(1i*current_input_angle_disc);
+%     current_input_angle = discretize(angle(current_input), phase_edges, phase_values);
+%     current_input = abs(current_input).*exp(1i*current_input_angle);
+    current_input_angle = angle(current_input);
+    current_input_angle(current_input_angle<0) = current_input_angle(current_input_angle<0) + 2*pi;
+    current_input_angle_disc = our_disc(current_input_angle, bit_resolution);
+    current_input = abs(current_input).*exp(1i*current_input_angle_disc);
 
     % Propagation
     current_result = prop(current_input,dx,dy,lambda,dist); 
