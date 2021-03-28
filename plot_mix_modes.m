@@ -9,7 +9,7 @@ coreRadius = 25/2;              % in um
 mode = 14;
 N = 50;
 
-d_free = 50;
+d_free = 150;
 rel_area= 0.5;
 d_sig = round(d_free * sqrt(rel_area));
 root = fullfile('plots', 'mix-plot', num2str(d_free));
