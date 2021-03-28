@@ -21,7 +21,7 @@ verhaeltnis = .4;               % Verhältnis zwischen Signal- und Gesamtbereich
 mode_target = 14;               % Nummer der Mode
 % desired_signal_size = 30;       % Größe des Signalbereichs
 
-gridSize = 125;                 % Größe des Freespace
+gridSize = 50;                 % Größe des Freespace
 desired_signal_size =  round(gridSize*sqrt(verhaeltnis));
 
 % Modenerzeugung

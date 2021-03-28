@@ -18,7 +18,7 @@ verhaeltnis = 0.4;
 load("all_mix_vector.mat");
 
 b = [1, 4, 8];
-g = [50, 150];
+g = [150];
 
 % Schleife
 for x=1:length(g)
