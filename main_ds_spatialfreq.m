@@ -23,7 +23,7 @@ load("data_mode_combos_spatial_frequencies_2.mat");
 vectors = cat(3, mode_vec_r3, mode_vec_r4, mode_vec_r5, mode_vec_r6, mode_vec_r7);
 
 b = [1, 4, 8];
-g = [50, 150];
+g = [150, 150];
 
 
 for radius=3:7
@@ -59,6 +59,8 @@ for radius=3:7
                     current_mix = mode_vector(i,mode);
                     mode_target_distribution = mode_target_distribution + current_mode .* current_mix;        % aktuelle Mode * Gewicht addieren
                 end
+
+%                 figure; subplot(1,2,1);imagesc(abs(mode_target_distribution));subplot(1,2,2);imagesc(abs(mode_dist_r3(:,:,i)));
 
                 % Algorithmus
                 [simann_mask, fidelity_vals] = simulated_annealing(optical_beam, mode_target_distribution, mask, n_it, bit_resolution);
