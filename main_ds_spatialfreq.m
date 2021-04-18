@@ -12,7 +12,7 @@ lambda=532e-9;                  % Wellenlänge [m]
 dist=0.5;                       % Propagationsdistanz [m]
 
 % Freiheitsgrade
-n_it = 1000e3;                  % Iterationsanzahl
+n_it = 1;                  % Iterationsanzahl
 verhaeltnis = 0.4;
 
 % Speicherordner
@@ -60,7 +60,7 @@ for radius=3:7
                     mode_target_distribution = mode_target_distribution + current_mode .* current_mix;        % aktuelle Mode * Gewicht addieren
                 end
 
-%                 figure; subplot(1,2,1);imagesc(abs(mode_target_distribution));subplot(1,2,2);imagesc(abs(mode_dist_r3(:,:,i)));
+                 figure; subplot(1,2,1);imagesc(abs(mode_target_distribution));subplot(1,2,2);imagesc(abs(mode_dist_r3(:,:,i)));
 
                 % Algorithmus
                 [simann_mask, fidelity_vals] = simulated_annealing(optical_beam, mode_target_distribution, mask, n_it, bit_resolution);

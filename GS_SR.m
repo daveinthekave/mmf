@@ -13,7 +13,7 @@ N=50;
 
 % discretizes the phase
 bit_resolution=8;
-d_free=75;
+d_free=150;
 d_sig = round(d_free * sqrt(rel_area));
 modes=build_modes(nCore,nCladding,wavelength,coreRadius,d_sig);
 target=squeeze(modes(mode,:,:));
